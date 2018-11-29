@@ -13,6 +13,6 @@ namespace WebApiTest.Data.Models.Classes
         public double Distance { get; set; }
         public DateTime RequestTime { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime FinishTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

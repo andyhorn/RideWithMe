@@ -1,4 +1,6 @@
-﻿namespace WebApiTest.Data.Models.Interfaces
+﻿using System.Collections.Generic;
+
+namespace WebApiTest.Data.Models.Interfaces
 {
     public interface IDataProvider
     {
@@ -14,5 +16,11 @@
         void UpdateVehicle(long targetId, string param, string newValue);
         void UpdateRide(long targetId, string param, string newValue);
         void UpdateLogin(long targetId, string param, string newValue);
+
+        List<IRide> GetRidesByUserId(long userId);
+        List<IRide> GetRidesById(long rideId);
+        List<IRide> GetAllRides();
+
+        void AddNewRide(IRide ride);
     }
 }

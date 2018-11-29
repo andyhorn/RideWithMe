@@ -53,6 +53,7 @@
     <Compile Include="Models\Classes\Ride.cs" />
     <Compile Include="Models\Classes\Rider.cs" />
     <Compile Include="Models\Classes\Vehicle.cs" />
+    <Compile Include="Models\Classes\UpdateHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

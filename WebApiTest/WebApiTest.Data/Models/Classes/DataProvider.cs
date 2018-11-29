@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using WebApiTest.Data.Models.Interfaces;
@@ -66,6 +67,52 @@ namespace WebApiTest.Data.Models.Classes
             }
         }
 
+        private IUser GetUserById(long userId)
+        {
+            var sqlCommandString = $"SELECT * FROM Users WHERE UserId = {userId};";
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            var newUser = new User();
+
+            using (OpenConnection())
+            {
+                var results = sqlCommand.ExecuteReader();
+
+                while (results.Read())
+                {
+                    newUser.Email = results.GetString(3);
+                    newUser.FirstName = results.GetString(1);
+                    newUser.LastName = results.GetString(2);
+                    newUser.UserType = results.GetInt32(4);
+                }
+            }
+
+            return newUser;
+        }
+
+        private IVehicle GetVehicleById(long vehicleId)
+        {
+            var sqlCommandString = $"SELECT * FROM Vehicles WHERE VehicleId = {vehicleId};";
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            var vehicle = new Vehicle();
+
+            using (OpenConnection())
+            {
+                var results = sqlCommand.ExecuteReader();
+
+                while (results.Read())
+                {
+                    vehicle.Driver = GetUserById(results.GetInt64(1));
+                    vehicle.Year = results.GetInt32(2);
+                    vehicle.Make = results.GetString(3);
+                    vehicle.Model = results.GetString(4);
+                    vehicle.Color = results.GetString(5);
+                    vehicle.License = results.GetString(6);
+                }
+            }
+
+            return vehicle;
+        }
+
         public bool UserExists(string email)
         {
             var sqlCommandString = $"SELECT COUNT(*) FROM Users WHERE Email = '{email}';";
@@ -114,6 +161,107 @@ namespace WebApiTest.Data.Models.Classes
                 var result = sqlCommand.ExecuteScalar()?.ToString();
                 return result;
             }
+        }
+
+        public List<IRide> GetRidesByUserId(long userId)
+        {
+            var sqlCommandString = $"SELECT * FROM Rides r WHERE r.UserId = {userId};";
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            var rideHistory = new List<IRide>();
+            SqlDataReader results;
+
+            using (OpenConnection())
+            {
+                results = sqlCommand.ExecuteReader();
+            }
+
+            if (results.HasRows)
+            {
+                while (results.Read())
+                {
+                    var ride = new Ride()
+                    {
+                        Driver = GetUserById(1),
+                        Rider = GetUserById(2),
+                        Vehicle = GetVehicleById(3),
+                        PickupLocation = results.GetString(4),
+                        Destination = results.GetString(5),
+                        RequestTime = results.GetDateTime(6),
+                        StartTime = results.GetDateTime(7),
+                        EndTime = results.GetDateTime(8),
+                        Distance = results.GetDouble(9)  
+                    };
+
+                    rideHistory.Add(ride);
+                }
+            }
+
+            return rideHistory;
+        }
+
+        public List<IRide> GetRidesById(long rideId)
+        {
+            var sqlCommandString = $"SELECT * FROM Rides WHERE RideId = {rideId};";
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            SqlDataReader results;
+            List<IRide> rideHistory = new List<IRide>();
+
+            using (OpenConnection())
+                results = sqlCommand.ExecuteReader();
+
+            while (results.Read())
+            {
+                rideHistory.Add(new Ride
+                {
+                    // index zero is a throwaway for now
+                    Driver = GetUserById(results.GetInt64(1)),
+                    Rider = GetUserById(results.GetInt64(2)),
+                    Vehicle = GetVehicleById(results.GetInt64(3)),
+                    PickupLocation = results.GetString(4),
+                    Destination = results.GetString(5),
+                    RequestTime = results.GetDateTime(6),
+                    StartTime = results.GetDateTime(7),
+                    EndTime = results.GetDateTime(8),
+                    Distance = results.GetDouble(9)
+                });
+            }
+
+            return rideHistory;
+        }
+
+        public List<IRide> GetAllRides()
+        {
+            var sqlCommandString = $"SELECT * FROM Rides;";
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            SqlDataReader results;
+            List<IRide> rideHistory = new List<IRide>();
+
+            using (OpenConnection())
+                results = sqlCommand.ExecuteReader();
+
+            while (results.Read())
+            {
+                rideHistory.Add(new Ride
+                {
+                    // index zero is a throwaway for now
+                    Driver = GetUserById(results.GetInt64(1)),
+                    Rider = GetUserById(results.GetInt64(2)),
+                    Vehicle = GetVehicleById(results.GetInt64(3)),
+                    PickupLocation = results.GetString(4),
+                    Destination = results.GetString(5),
+                    RequestTime = results.GetDateTime(6),
+                    StartTime = results.GetDateTime(7),
+                    EndTime = results.GetDateTime(8),
+                    Distance = results.GetDouble(9)
+                });
+            }
+
+            return rideHistory;
+        }
+
+        public void AddNewRide(IRide ride)
+        {
+            // TODO: Implement AddNewRide
         }
 
         public void UpdateUser(long targetId, string param, string newValue)
