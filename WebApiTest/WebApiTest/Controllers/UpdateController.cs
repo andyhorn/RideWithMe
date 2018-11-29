@@ -18,42 +18,21 @@ namespace WebApiTest.Controllers
         [HttpPut, HttpPost]
         public void Post(long targetId, string targetTable, string param, string newValue)
         {
-            //var sqlCommandString = $"UPDATE{table} SET '{param}' = '{newValue}' WHERE User "
-            switch (targetTable)
-            {
-                case "users":
-                    UpdateUsers(targetId, param, newValue);
-                    break;
-                case "vehicles":
-                    UpdateVehicles(targetId, param, newValue);
-                    break;
-                case "rides":
-                    UpdateRides(targetId, param, newValue);
-                    break;
-                case "logins":
-                    UpdateLogins(targetId, param, newValue);
-                    break;
-            }
-        }
-
-        private void UpdateUsers(long targetId, string param, string newValue)
-        {
-
-        }
-
-        private void UpdateVehicles(long targetId, string param, string newValue)
-        {
-
-        }
-
-        private void UpdateRides(long targetId, string param, string newValue)
-        {
-
-        }
-
-        private void UpdateLogins(long targetId, string param, string newValue)
-        {
-
+                switch (targetTable)
+                {
+                    case "users":
+                        _dataProvider.UpdateUser(targetId, param, newValue);
+                        break;
+                    case "vehicles":
+                        _dataProvider.UpdateVehicle(targetId, param, newValue);
+                        break;
+                    case "rides":
+                        _dataProvider.UpdateRide(targetId, param, newValue);
+                        break;
+                    case "logins":
+                        _dataProvider.UpdateLogin(targetId, param, newValue);
+                        break;
+                }
         }
     }
 }

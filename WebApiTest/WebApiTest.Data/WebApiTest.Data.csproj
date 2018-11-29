@@ -47,6 +47,7 @@
     <Compile Include="Models\Interfaces\IDriver.cs" />
     <Compile Include="Models\Interfaces\IRide.cs" />
     <Compile Include="Models\Interfaces\IRider.cs" />
+    <Compile Include="Models\Interfaces\IUpdateHandler.cs" />
     <Compile Include="Models\Interfaces\IUser.cs" />
     <Compile Include="Models\Interfaces\IVehicle.cs" />
     <Compile Include="Models\Classes\Ride.cs" />

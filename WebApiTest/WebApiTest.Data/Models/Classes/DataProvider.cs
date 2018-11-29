@@ -8,13 +8,15 @@ namespace WebApiTest.Data.Models.Classes
     public class DataProvider : IDataProvider
     {
         private readonly SqlConnection _connection;
-        //private const string SqlConnectionString = "Server=.;Database=RideWithMe;Integrated Security=true;";
 
+        private readonly IUpdateHandler _updateHandler;
+        //private const string SqlConnectionString = "Server=.;Database=RideWithMe;Integrated Security=true;";
         private const string SqlConnectionString = @"Server=tcp:ridewithme.database.windows.net,1433;Initial Catalog=RideWithMeDb;Persist Security Info=False;User ID=andrew.horn;Password=B0r1sCat;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         public DataProvider()
         {
             _connection = new SqlConnection();
+            _updateHandler = new UpdateHandler(_connection, SqlConnectionString);
         }
 
         private SqlConnection OpenConnection()
@@ -112,6 +114,26 @@ namespace WebApiTest.Data.Models.Classes
                 var result = sqlCommand.ExecuteScalar()?.ToString();
                 return result;
             }
+        }
+
+        public void UpdateUser(long targetId, string param, string newValue)
+        {
+            _updateHandler.UpdateUser(targetId, param, newValue);
+        }
+
+        public void UpdateVehicle(long targetId, string param, string newValue)
+        {
+            _updateHandler.UpdateVehicle(targetId, param, newValue);
+        }
+
+        public void UpdateRide(long targetId, string param, string newValue)
+        {
+            _updateHandler.UpdateRide(targetId, param, newValue);
+        }
+
+        public void UpdateLogin(long targetId, string param, string newValue)
+        {
+            _updateHandler.UpdateLogin(targetId, param, newValue);
         }
     }
 }
