@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\DataProvider.cs" />
-    <Compile Include="Interfaces\IDataProvider.cs" />
-    <Compile Include="Interfaces\IDriver.cs" />
-    <Compile Include="Interfaces\IRide.cs" />
-    <Compile Include="Interfaces\IRider.cs" />
-    <Compile Include="Interfaces\IUser.cs" />
-    <Compile Include="Interfaces\IVehicle.cs" />
+    <Compile Include="Models\Classes\DataProvider.cs" />
+    <Compile Include="Models\Classes\Driver.cs" />
+    <Compile Include="Models\Interfaces\IDataProvider.cs" />
+    <Compile Include="Models\Interfaces\IDriver.cs" />
+    <Compile Include="Models\Interfaces\IRide.cs" />
+    <Compile Include="Models\Interfaces\IRider.cs" />
+    <Compile Include="Models\Interfaces\IUser.cs" />
+    <Compile Include="Models\Interfaces\IVehicle.cs" />
+    <Compile Include="Models\Classes\Ride.cs" />
+    <Compile Include="Models\Classes\Rider.cs" />
+    <Compile Include="Models\Classes\Vehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

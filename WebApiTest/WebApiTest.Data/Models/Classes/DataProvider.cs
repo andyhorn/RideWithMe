@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using WebApiTest.Data.Interfaces;
+using WebApiTest.Data.Models.Interfaces;
 
-namespace WebApiTest.Data.Classes
+namespace WebApiTest.Data.Models.Classes
 {
     public class DataProvider : IDataProvider
     {

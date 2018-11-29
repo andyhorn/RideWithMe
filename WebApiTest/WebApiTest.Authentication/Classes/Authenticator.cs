@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Helpers;
 using WebApiTest.Authentication.Interfaces;
-using WebApiTest.Data.Interfaces;
+using WebApiTest.Data.Models.Interfaces;
 
 namespace WebApiTest.Authentication.Classes
 {

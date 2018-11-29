@@ -1,4 +1,4 @@
-﻿namespace WebApiTest.Data.Interfaces
+﻿namespace WebApiTest.Data.Models.Interfaces
 {
     public interface IRider
     {

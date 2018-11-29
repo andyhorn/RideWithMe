@@ -1,4 +1,4 @@
-﻿using WebApiTest.Data.Interfaces;
+﻿using WebApiTest.Data.Models.Interfaces;
 
 namespace WebApiTest.Authentication.Interfaces
 {
