@@ -43,7 +43,11 @@
   <ItemGroup>
     <Compile Include="Classes\DataProvider.cs" />
     <Compile Include="Interfaces\IDataProvider.cs" />
+    <Compile Include="Interfaces\IDriver.cs" />
+    <Compile Include="Interfaces\IRide.cs" />
+    <Compile Include="Interfaces\IRider.cs" />
     <Compile Include="Interfaces\IUser.cs" />
+    <Compile Include="Interfaces\IVehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
