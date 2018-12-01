@@ -25,13 +25,11 @@ namespace RideWithMeWebApp.Api.Controllers
             if (!string.IsNullOrEmpty(firstName)
                 && !string.IsNullOrEmpty(lastName)
                 && !string.IsNullOrEmpty(email)
-                && !string.IsNullOrEmpty(password))
+                && !string.IsNullOrEmpty(password)) // If all parameters are included, continue with registration:
             {
-                //var newUser = new User { FirstName = firstName, LastName = lastName, Email = email };
-                //response.Data["user"] = newUser;
-
-                if (!_authenticator.UserExists(email))
+                if (!_authenticator.UserExists(email)) // Only register if the user doesn't already exist
                 {
+                    // RegisterNewUser will return a bool indicating whether or not it was successful
                     var success = _authenticator.RegisterNewUser(new User
                     {
                         FirstName = firstName,
@@ -39,22 +37,28 @@ namespace RideWithMeWebApp.Api.Controllers
                         Email = email
                     }, password);
 
-                    //newUser = null;
-                    var newUser = _authenticator.GetUser(email, password);
+                    if (success)
+                    {
+                        var newUser = _authenticator.GetUser(email, password);
+                        response.Message = "User registered successfully.";
+                        response.Data["user"] = newUser;
+                    }
+                    else
+                    {
+                        response.Message = "Error: Unable to register user.";
+                    }
 
-                    response.Message = success
-                        ? "User registered successfully."
-                        : "Error: Unable to register user.";
-                    response.Data["user"] = newUser;
+                    //response.Message = success
+                    //    ? "User registered successfully."
+                    //    : "Error: Unable to register user.";
+                    //response.Data["user"] = newUser;
                 }
-                else
+                else // Indicate the user already exists
                 {
                     response.Message = "Error: User already exists.";
                 }
-
-                //response.Data["user"] = newUser;
             }
-            else
+            else // Cannot register without all required parameters
             {
                 response.Message = "Invalid submission. All parameters required.";
             }

@@ -20,44 +20,28 @@ namespace RideWithMeWebApp.Authentication.Classes
         {
             try
             {
-                var userId = _dataProvider.GetUserIdByEmail(email);
-                var salt = _dataProvider.GetSaltById(userId);
-                var hash = _dataProvider.GetHashById(userId);
+                // Will catch any errors thrown by improper SQL queries
+                var userId = _dataProvider.GetUserIdByEmail(email); // Get the user's ID
+                var salt = _dataProvider.GetSaltById(userId);       // Get the user's salt
+                var hash = _dataProvider.GetHashById(userId);       // Get the user's hash key
 
-                return Crypto.VerifyHashedPassword(hash, password + salt);
+                return Crypto.VerifyHashedPassword(hash, password + salt); // Verify the password is valid
             }
             catch (Exception)
             {
+                // Return false on any exceptions
                 return false;
             }
-
-            //try
-            //{
-            //    var userId = _dataProvider.GetUserIdByEmail(email);
-            //    var salt = _dataProvider.GetSaltById(userId);
-            //    var hash = _dataProvider.GetHashById(userId);
-
-            //    if (Crypto.VerifyHashedPassword(hash, password + salt))
-            //    {
-            //        // TODO: Return the actual user object from GetUserByEmail method
-            //        return _dataProvider.GetUserById(_dataProvider.GetUserIdByEmail(email));
-            //    }
-
-            //    return null;
-            //}
-            //catch (Exception)
-            //{
-            //    return null;
-            //}
-
         }
 
         public IUser GetUser(string email, string password)
         {
+            // Check if user exists, then check if the login is valid
             if (UserExists(email) && ValidLogin(email, password))
             {
                 try
                 {
+                    // Return the user's data if all checks are passed
                     return _dataProvider.GetUserById(_dataProvider.GetUserIdByEmail(email));
                 }
                 catch (Exception)
@@ -71,28 +55,6 @@ namespace RideWithMeWebApp.Authentication.Classes
         public bool UserExists(string email)
         {
             return _dataProvider.UserExists(email);
-        }
-
-        public bool RegisterNewUser(string email, string password, string firstName, string lastName)
-        {
-            try
-            {
-                var salt = Crypto.GenerateSalt();
-                var newPassword = password + salt;
-                var hash = Crypto.HashPassword(newPassword);
-                return _dataProvider.AddNewUser(new User
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    Email = email
-                }, salt, hash);
-
-                // TODO: 
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public bool RegisterNewUser(IUser newUser, string password)
