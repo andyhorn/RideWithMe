@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideWithMeWebApp.DataProvid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideWithMeWebApp.Models", "RideWithMeWebApp.Models\RideWithMeWebApp.Models.csproj", "{4905171F-73F7-48CB-94DE-CDB376268EA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideWithMeWebApp.Web", "RideWithMeWebApp.Web\RideWithMeWebApp.Web.csproj", "{0EC54F8C-ABB5-4EB7-9C77-9BA34A6D40AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4905171F-73F7-48CB-94DE-CDB376268EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4905171F-73F7-48CB-94DE-CDB376268EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4905171F-73F7-48CB-94DE-CDB376268EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC54F8C-ABB5-4EB7-9C77-9BA34A6D40AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC54F8C-ABB5-4EB7-9C77-9BA34A6D40AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC54F8C-ABB5-4EB7-9C77-9BA34A6D40AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC54F8C-ABB5-4EB7-9C77-9BA34A6D40AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
