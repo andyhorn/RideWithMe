@@ -5,6 +5,7 @@ namespace WebApiTest.Data.Models.Classes
 {
     public class Ride : IRide
     {
+        public int Id { get; set; }
         public IUser Rider { get; set; }
         public IUser Driver { get; set; }
         public IVehicle Vehicle { get; set; }

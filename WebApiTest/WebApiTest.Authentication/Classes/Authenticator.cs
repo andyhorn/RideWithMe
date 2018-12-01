@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Helpers;
 using WebApiTest.Authentication.Interfaces;
+using WebApiTest.Data.Models.Classes;
 using WebApiTest.Data.Models.Interfaces;
 
 namespace WebApiTest.Authentication.Classes
@@ -18,7 +19,7 @@ namespace WebApiTest.Authentication.Classes
         {
             try
             {
-                var userId = _dataProvider.GetIdByEmail(email);
+                var userId = _dataProvider.GetUserIdByEmail(email);
                 var salt = _dataProvider.GetSaltById(userId);
                 var hash = _dataProvider.GetHashById(userId);
 
@@ -54,6 +55,21 @@ namespace WebApiTest.Authentication.Classes
                 var newPassword = password + salt;
                 var hash = Crypto.HashPassword(newPassword);
                 return _dataProvider.AddNewUser(firstName, lastName, email, salt, hash);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool RegisterNewUser(IUser newUser, string password)
+        {
+            try
+            {
+                var salt = Crypto.GenerateSalt();
+                var newPassword = password + salt;
+                var hash = Crypto.HashPassword(newPassword);
+                return _dataProvider.AddNewUser(newUser, salt, hash);
             }
             catch (Exception)
             {

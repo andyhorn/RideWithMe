@@ -2,14 +2,10 @@
 {
     public interface IUser
     {
-
-    }
-
-    public class User : IUser
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public int UserType { get; set; }
+        int Id { get; set; }
+        string FirstName { get; set; }
+        string LastName { get; set; }
+        string Email { get; set; }
+        int UserType { get; set; }
     }
 }

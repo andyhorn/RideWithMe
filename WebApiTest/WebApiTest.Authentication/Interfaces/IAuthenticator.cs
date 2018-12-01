@@ -7,5 +7,6 @@ namespace WebApiTest.Authentication.Interfaces
         IUser ValidateUser(string email, string password);
         bool UserExists(string email);
         bool RegisterNewUser(string email, string password, string firstName, string lastName);
+        bool RegisterNewUser(IUser newUser, string password);
     }
 }

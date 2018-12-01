@@ -7,7 +7,6 @@ using WebApiTest.Data.Models.Interfaces;
 namespace WebApiTest.Controllers
 {
     [Route("api/[controller]")]
-    //[Produces("application/json")]
     [ApiController]
     public class LoginController : Controller
     {
@@ -21,11 +20,14 @@ namespace WebApiTest.Controllers
 
         // Get user based on login
         [HttpGet]
-        public IUser Get(string email, string password)
+        public WebResponse Get(string email, string password)
         {
-            //return _authenticator.ValidateUser(email, password);
             var result = _authenticator.ValidateUser(email, password);
-            return result;
+
+            var response = new WebResponse {Message = result != null ? "Success!" : "Error!"};
+            response.Data["user"] = result;
+
+            return response;
         }
     }
 }

@@ -21,25 +21,17 @@ namespace WebApiTest.Controllers
         [HttpPost]
         public WebResponse Post(string firstName, string lastName, string email, string password)
         {
+            var newUser = new User {FirstName = firstName, LastName = lastName, Email = email};
             var response = new WebResponse();
+            response.Data["user"] = newUser;
+
             if (!_authenticator.UserExists(email))
             {
-                var success = _authenticator.RegisterNewUser(
-                    email
-                    , password
-                    , firstName
-                    , lastName);
+                var success = _authenticator.RegisterNewUser(newUser, password);
 
-                if (success)
-                    response.Message = "User registered successfully.";
-                else
-                {
-                    response.Message = "Error: Unable to register user.";
-                    response.Data["email"] = email;
-                    response.Data["firstName"] = firstName;
-                    response.Data["lastName"] = lastName;
-                    response.Data["password"] = password;
-                }
+                response.Message = success 
+                    ? "User registered successfully." 
+                    : "Error: Unable to register user.";
             }
             else
             {
