@@ -420,6 +420,7 @@ namespace WebApiTest.Data.Models.Classes
                 var rideHistory = new List<IRide>();
                 while (results.Read())
                 {
+                    /*
                     rideHistory.Add(new Ride
                     {
                         Driver = GetUserById(1),
@@ -427,11 +428,25 @@ namespace WebApiTest.Data.Models.Classes
                         Vehicle = GetVehicleById(3),
                         PickupLocation = results.GetString(4),
                         Destination = results.GetString(5),
-                        RequestTime = results.GetDateTime(6),
-                        StartTime = results.GetDateTime(7),
-                        EndTime = results.GetDateTime(8),
+                        RequestTime = results.GetDateTime(6), // This DateTime cannot be null
+                        StartTime = (results.GetValue(7) == null) ? new DateTime?() : results.GetDateTime(7), // This DateTime CAN be null
+                        EndTime = (results.GetValue(7) == null) ? new DateTime?() : results.GetDateTime(8), // This DateTime CAN be null
                         Distance = results.GetDouble(9)
                     });
+                    */
+                    var newRide = new Ride();
+                    newRide.Id = results.GetInt32(0);
+                    newRide.Driver = (results.GetValue(1) != DBNull.Value) ? GetUserById(results.GetInt32(1)) : null; // CAN be NULL
+                    newRide.Rider = GetUserById(results.GetInt32(2)); // CANNOT be null
+                    newRide.Vehicle = (results.GetValue(3) != DBNull.Value) ? GetVehicleById(results.GetInt32(3)) : null; // CAN be null
+                    newRide.PickupLocation = results.GetString(4);
+                    newRide.Destination = results.GetString(5);
+                    newRide.RequestTime = results.GetDateTime(6);
+                    newRide.StartTime = (results.GetValue(7) != DBNull.Value) ? results.GetDateTime(7) : new DateTime?(); // CAN be null
+                    newRide.EndTime = (results.GetValue(8) != DBNull.Value) ? results.GetDateTime(8) : new DateTime?(); // CAN be null
+                    newRide.Distance = (results.GetValue(9) != DBNull.Value) ? results.GetDouble(9) : 0; // CAN be null (zero)
+
+                    rideHistory.Add(newRide);
                 }
 
                 return rideHistory;

@@ -12,7 +12,7 @@ namespace WebApiTest.Data.Models.Interfaces
         string PickupLocation { get; set; }
         double Distance { get; set; }
         DateTime RequestTime { get; set; }
-        DateTime StartTime { get; set; }
-        DateTime EndTime { get; set; }
+        DateTime? StartTime { get; set; }
+        DateTime? EndTime { get; set; }
     }
 }
