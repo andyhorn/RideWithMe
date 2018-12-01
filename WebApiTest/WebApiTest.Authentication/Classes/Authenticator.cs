@@ -54,7 +54,12 @@ namespace WebApiTest.Authentication.Classes
                 var salt = Crypto.GenerateSalt();
                 var newPassword = password + salt;
                 var hash = Crypto.HashPassword(newPassword);
-                return _dataProvider.AddNewUser(firstName, lastName, email, salt, hash);
+                return _dataProvider.AddNewUser(new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email
+                }, salt, hash);
             }
             catch (Exception)
             {

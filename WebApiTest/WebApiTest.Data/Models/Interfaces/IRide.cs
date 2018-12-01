@@ -14,5 +14,6 @@ namespace WebApiTest.Data.Models.Interfaces
         DateTime RequestTime { get; set; }
         DateTime? StartTime { get; set; }
         DateTime? EndTime { get; set; }
+        string Status { get; set; }
     }
 }

@@ -28,5 +28,6 @@ namespace WebApiTest.Data.Models.Classes
         public DateTime RequestTime { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
+        public string Status { get; set; }
     }
 }

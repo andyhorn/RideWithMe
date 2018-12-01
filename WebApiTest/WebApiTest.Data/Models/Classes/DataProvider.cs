@@ -47,7 +47,6 @@ namespace WebApiTest.Data.Models.Classes
 
             using (OpenConnection())
             {
-                //var reader = sqlCommand.ExecuteReader();
                 adapter.Fill(dataSet);
                 return dataSet.CreateDataReader();
             }
@@ -76,16 +75,6 @@ namespace WebApiTest.Data.Models.Classes
         {
             var sqlCommandString = $"SELECT Salt FROM Logins WHERE UserId = {userId};";
             return RunScalar(sqlCommandString);
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar()?.ToString();
-                return result;
-            }
-            */
         }
 
         public long GetUserIdByEmail(string email)
@@ -94,18 +83,6 @@ namespace WebApiTest.Data.Models.Classes
             return RunScalar(sqlCommandString) != null 
                 ? Convert.ToInt64(RunScalar(sqlCommandString)) 
                 : -1;
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar();
-                if (result == null) return -1;
-
-                return Convert.ToInt64(result.ToString());
-            }
-            */
         }
 
         public string GetHashById(long userId)
@@ -113,42 +90,24 @@ namespace WebApiTest.Data.Models.Classes
             var sqlCommandString = $"SELECT Hash FROM Logins WHERE UserId = {userId};";
 
             return RunScalar(sqlCommandString);
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar()?.ToString();
-
-                return result;
-            }
-            */
         }
 
         private IUser GetUserById(long userId)
         {
             var sqlCommandString = $"SELECT * FROM Users WHERE UserId = {userId};";
 
-            //var results = RunReader(sqlCommandString);
+            var results = RunReader(sqlCommandString);
 
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var results = sqlCommand.ExecuteReader();
-
-                return results.Read()
-                    ? new User
-                    {
-                        Id = results.GetInt32(0),
-                        FirstName = results.GetString(1),
-                        LastName = results.GetString(2),
-                        Email = results.GetString(3),
-                        UserType = results.GetInt32(4)
-                    }
-                    : null;
-            }
+            return results.Read()
+                ? new User
+                {
+                    Id = results.GetInt32(0),
+                    FirstName = results.GetString(1),
+                    LastName = results.GetString(2),
+                    Email = results.GetString(3),
+                    UserType = results.GetInt32(4)
+                }
+                : null;
         }
 
         private IVehicle GetVehicleById(long vehicleId)
@@ -156,7 +115,6 @@ namespace WebApiTest.Data.Models.Classes
             var sqlCommandString = $"SELECT * FROM Vehicles WHERE VehicleId = {vehicleId};";
 
             var results = RunReader(sqlCommandString);
-           //var table = results.Tables[0];
 
             return results.Read()
                 ? new Vehicle
@@ -170,63 +128,13 @@ namespace WebApiTest.Data.Models.Classes
                     License = results.GetString(6)
                 }
                 : null;
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-            var vehicle = new Vehicle();
-
-            using (OpenConnection())
-            {
-                var results = sqlCommand.ExecuteReader();
-
-                while (results.Read())
-                {
-                    vehicle.Driver = GetUserById(results.GetInt64(1));
-                    vehicle.Year = results.GetInt32(2);
-                    vehicle.Make = results.GetString(3);
-                    vehicle.Model = results.GetString(4);
-                    vehicle.Color = results.GetString(5);
-                    vehicle.License = results.GetString(6);
-                }
-            }
-
-            return vehicle;
-            */
         }
 
         public bool UserExists(string email)
         {
             var sqlCommandString = $"SELECT COUNT(*) FROM Users WHERE Email = '{email}';";
 
-            return RunScalar(sqlCommandString).ToString() == "1";
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar()?.ToString();
-                return result == "1";
-            }
-            */
-        }
-
-        public bool AddNewUser(string firstName, string lastName, string email, string salt, string hash)
-        {
-            var sqlCommandString =
-                $"EXEC dbo.sp_AddNewUser '{firstName}', '{lastName}', '{email}', '{salt}', '{hash}';";
-
-            RunNonQuery(sqlCommandString);
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                sqlCommand.ExecuteNonQuery();
-            }
-            */
-            return UserExists(email);
+            return RunScalar(sqlCommandString) == "1";
         }
 
         public bool AddNewUser(IUser newUser, string salt, string hash)
@@ -237,14 +145,6 @@ namespace WebApiTest.Data.Models.Classes
 
             RunNonQuery(sqlCommandString);
 
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                sqlCommand.ExecuteNonQuery();
-            }
-            */
             return UserExists(newUser.Email);
         }
 
@@ -253,15 +153,6 @@ namespace WebApiTest.Data.Models.Classes
             var sqlCommandString = $"SELECT FirstName FROM Users WHERE Email = '{email}';";
 
             return RunScalar(sqlCommandString);
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar()?.ToString();
-                return result;
-            }
-            */
         }
 
         public string GetLastNameByEmail(string email)
@@ -269,16 +160,6 @@ namespace WebApiTest.Data.Models.Classes
             var sqlCommandString = $"SELECT LastName FROM Users WHERE Email = '{email}';";
 
             return RunScalar(sqlCommandString);
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-            using (OpenConnection())
-            {
-                var result = sqlCommand.ExecuteScalar()?.ToString();
-                return result;
-            }
-            */
         }
 
         public List<IRide> GetRidesByUserId(long userId)
@@ -312,42 +193,6 @@ namespace WebApiTest.Data.Models.Classes
             }
 
             return null;
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-
-           
-            var rideHistory = new List<IRide>();
-            SqlDataReader results;
-
-            using (OpenConnection())
-            {
-                results = sqlCommand.ExecuteReader();
-            }
-
-            if (results.HasRows)
-            {
-                while (results.Read())
-                {
-                    var ride = new Ride()
-                    {
-                        Driver = GetUserById(1),
-                        Rider = GetUserById(2),
-                        Vehicle = GetVehicleById(3),
-                        PickupLocation = results.GetString(4),
-                        Destination = results.GetString(5),
-                        RequestTime = results.GetDateTime(6),
-                        StartTime = results.GetDateTime(7),
-                        EndTime = results.GetDateTime(8),
-                        Distance = results.GetDouble(9)  
-                    };
-
-                    rideHistory.Add(ride);
-                }
-            }
-
-            return rideHistory;
-            */
         }
 
         public List<IRide> GetRidesById(long rideId)
@@ -380,33 +225,6 @@ namespace WebApiTest.Data.Models.Classes
 
             return null;
 
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-            SqlDataReader results;
-            List<IRide> rideHistory = new List<IRide>();
-
-            using (OpenConnection())
-                results = sqlCommand.ExecuteReader();
-
-            while (results.Read())
-            {
-                rideHistory.Add(new Ride
-                {
-                    // index zero is a throwaway for now
-                    Driver = GetUserById(results.GetInt64(1)),
-                    Rider = GetUserById(results.GetInt64(2)),
-                    Vehicle = GetVehicleById(results.GetInt64(3)),
-                    PickupLocation = results.GetString(4),
-                    Destination = results.GetString(5),
-                    RequestTime = results.GetDateTime(6),
-                    StartTime = results.GetDateTime(7),
-                    EndTime = results.GetDateTime(8),
-                    Distance = results.GetDouble(9)
-                });
-            }
-
-            return rideHistory;
-            */
         }
 
         public List<IRide> GetAllRides()
@@ -420,79 +238,38 @@ namespace WebApiTest.Data.Models.Classes
                 var rideHistory = new List<IRide>();
                 while (results.Read())
                 {
-                    /*
                     rideHistory.Add(new Ride
                     {
-                        Driver = GetUserById(1),
-                        Rider = GetUserById(2),
-                        Vehicle = GetVehicleById(3),
-                        PickupLocation = results.GetString(4),
-                        Destination = results.GetString(5),
-                        RequestTime = results.GetDateTime(6), // This DateTime cannot be null
-                        StartTime = (results.GetValue(7) == null) ? new DateTime?() : results.GetDateTime(7), // This DateTime CAN be null
-                        EndTime = (results.GetValue(7) == null) ? new DateTime?() : results.GetDateTime(8), // This DateTime CAN be null
-                        Distance = results.GetDouble(9)
+                        Id = results.GetInt32(0),
+                        Driver = (results.GetValue(1) != DBNull.Value) ? GetUserById(results.GetInt32(1)) : null,       // Driver can be null
+                        Rider = GetUserById(results.GetInt32(2)),                                                       // Rider cannot be null
+                        Vehicle = (results.GetValue(3) != DBNull.Value) ? GetVehicleById(results.GetInt32(3)) : null,   // Vehicle can be null
+                        PickupLocation = results.GetString(4),                                                          // Can be null string
+                        Destination = results.GetString(5),                                                             // Can, but won't be, null
+                        RequestTime = results.GetDateTime(6),                                                           // Cannot be null
+                        StartTime = (results.GetValue(7) != DBNull.Value) ? results.GetDateTime(7) : new DateTime?(),   // Can be null
+                        EndTime = (results.GetValue(8) != DBNull.Value) ? results.GetDateTime(8) : new DateTime?(),     // Can be null
+                        Distance = (results.GetValue(9) != DBNull.Value) ? results.GetDouble(9) : 0,                    // Can be null/zero
+                        Status = results.GetString(10)
                     });
-                    */
-                    var newRide = new Ride();
-                    newRide.Id = results.GetInt32(0);
-                    newRide.Driver = (results.GetValue(1) != DBNull.Value) ? GetUserById(results.GetInt32(1)) : null; // CAN be NULL
-                    newRide.Rider = GetUserById(results.GetInt32(2)); // CANNOT be null
-                    newRide.Vehicle = (results.GetValue(3) != DBNull.Value) ? GetVehicleById(results.GetInt32(3)) : null; // CAN be null
-                    newRide.PickupLocation = results.GetString(4);
-                    newRide.Destination = results.GetString(5);
-                    newRide.RequestTime = results.GetDateTime(6);
-                    newRide.StartTime = (results.GetValue(7) != DBNull.Value) ? results.GetDateTime(7) : new DateTime?(); // CAN be null
-                    newRide.EndTime = (results.GetValue(8) != DBNull.Value) ? results.GetDateTime(8) : new DateTime?(); // CAN be null
-                    newRide.Distance = (results.GetValue(9) != DBNull.Value) ? results.GetDouble(9) : 0; // CAN be null (zero)
-
-                    rideHistory.Add(newRide);
                 }
 
                 return rideHistory;
             }
 
             return null;
-
-            /*
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
-            SqlDataReader results;
-            List<IRide> rideHistory = new List<IRide>();
-
-            using (OpenConnection())
-                results = sqlCommand.ExecuteReader();
-
-            while (results.Read())
-            {
-                rideHistory.Add(new Ride
-                {
-                    // index zero is a throwaway for now
-                    Driver = GetUserById(results.GetInt64(1)),
-                    Rider = GetUserById(results.GetInt64(2)),
-                    Vehicle = GetVehicleById(results.GetInt64(3)),
-                    PickupLocation = results.GetString(4),
-                    Destination = results.GetString(5),
-                    RequestTime = results.GetDateTime(6),
-                    StartTime = results.GetDateTime(7),
-                    EndTime = results.GetDateTime(8),
-                    Distance = results.GetDouble(9)
-                });
-            }
-
-            return rideHistory;
-            */
         }
 
-        public void AddNewRide(IRide ride)
+        public bool AddNewRide(IRide ride)
         {
             var sqlCommandString =
                 "INSERT INTO Rides (DriverId, RiderId, VehicleId, PickupLocation, "
-                + "Destination, RequestTime, StartTime, EndTime, Distance) "
+                + "Destination, RequestTime, StartTime, EndTime, Distance, StatusId) "
                 + $"VALUES (NULL, {ride.Rider.Id}, NULL,"
                 + $" '{ride.PickupLocation}', '{ride.Destination}', '{ride.RequestTime}',"
-                + $" NULL, NULL, NULL);";
+                + $" NULL, NULL, NULL, 0);";
 
-            RunNonQuery(sqlCommandString);
+            return RunNonQuery(sqlCommandString);
         }
 
         public void UpdateUser(long targetId, string param, string newValue)

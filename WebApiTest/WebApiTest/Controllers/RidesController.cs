@@ -15,7 +15,6 @@ namespace WebApiTest.Controllers
         public RidesController()
         {
             _dataProvider = new DataProvider();
-            //Console.WriteLine("RidesController created.");
         }
 
         [HttpGet("userId/{id}")]
@@ -38,7 +37,17 @@ namespace WebApiTest.Controllers
         public WebResponse GetAllRides()
         {
             var response = new WebResponse();
-            response.Data["rideHistory"] = _dataProvider.GetAllRides();
+            var data = _dataProvider.GetAllRides();
+            if (data != null)
+            {
+                response.Message = "Success!";
+                response.Data["rideHistory"] = _dataProvider.GetAllRides();
+            }
+            else
+            {
+                response.Message = "Error: Unable to GetAllRides.";
+            }
+            
             return response;
         }
 
