@@ -2,8 +2,19 @@
 
 namespace WebApiTest.Data.Models.Classes
 {
-    class Vehicle : IVehicle
+    public class Vehicle : IVehicle
     {
+        //public Vehicle() {}
+
+        //public Vehicle(User driver)
+        //{
+        //    Driver = driver;
+        //}
+
+        public Vehicle()
+        {
+            Driver = new User();
+        }
         public int Id { get; set; }
         public IUser Driver { get; set; }
         public string Make { get; set; }

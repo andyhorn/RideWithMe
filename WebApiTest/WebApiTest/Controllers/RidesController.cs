@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiTest.Data.Models.Classes;
 using WebApiTest.Data.Models.Interfaces;
@@ -14,30 +15,75 @@ namespace WebApiTest.Controllers
         public RidesController()
         {
             _dataProvider = new DataProvider();
+            Console.WriteLine("RidesController created.");
         }
 
         [HttpGet("userId/{id}")]
-        public List<IRide> GetByUserId(long id)
+        public WebResponse GetByUserId(long id)
         {
-            return _dataProvider.GetRidesByUserId(id);
+            var response = new WebResponse();
+            response.Data["rideHistory"] = _dataProvider.GetRidesByUserId(id);
+            return response;
         }
 
         [HttpGet("rideId/{id}")]
-        public List<IRide> GetByRideId(long id)
+        public WebResponse GetByRideId(long id)
         {
-            return _dataProvider.GetRidesById(id);
+            var response = new WebResponse();
+            response.Data["rideHistory"] = _dataProvider.GetRidesById(id);
+            return response;
         }
 
-        [HttpGet("all")]
-        public List<IRide> GetAllRides()
+        [HttpGet("all/{userId}")]
+        public WebResponse GetAllRides()
         {
-            return _dataProvider.GetAllRides();
+            var response = new WebResponse();
+            response.Data["rideHistory"] = _dataProvider.GetAllRides();
+            return response;
         }
+
 
         [HttpPost]
-        public void Post([FromBody] IRide ride)
+        [ProducesResponseType(200)]
+        public OkResult Post([FromBody] Ride ride)
         {
             _dataProvider.AddNewRide(ride);
+
+            return Ok();
+        }
+
+        [HttpGet("test")]
+        public IRide Get()
+        {
+            var newRide = new Ride();
+            newRide.Rider = new User
+                {FirstName = "Andy", LastName = "Horn", Email = "andyjhorn@gmail.com", Id = 1, UserType = 0};
+            newRide.Driver = new User
+            {
+                FirstName = "Krystal",
+                LastName = "Cruz",
+                Email = "kcruz191@gmail.com",
+                Id = 2,
+                UserType = 1
+            };
+            newRide.Vehicle = new Vehicle()
+            {
+                Color = "White",
+                Driver = null,
+                Id = 1,
+                License = "771JJA",
+                Make = "Hyundai",
+                Model = "Elantra",
+                Year = 2012
+            };
+            newRide.Destination = "Portland, OR";
+            newRide.Distance = 15.0;
+            newRide.RequestTime = new DateTime(2018, 11, 30);
+            newRide.StartTime = new DateTime(2018, 11, 30);
+            newRide.EndTime = new DateTime(2018, 11, 30);
+            newRide.PickupLocation = "Wilsonville, OR";
+
+            return newRide;
         }
     }
 }

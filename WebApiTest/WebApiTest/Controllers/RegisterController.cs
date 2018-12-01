@@ -21,21 +21,31 @@ namespace WebApiTest.Controllers
         [HttpPost]
         public WebResponse Post(string firstName, string lastName, string email, string password)
         {
-            var newUser = new User {FirstName = firstName, LastName = lastName, Email = email};
             var response = new WebResponse();
-            response.Data["user"] = newUser;
-
-            if (!_authenticator.UserExists(email))
+            if (!string.IsNullOrEmpty(firstName)
+                && !string.IsNullOrEmpty(lastName)
+                && !string.IsNullOrEmpty(email)
+                && !string.IsNullOrEmpty(password))
             {
-                var success = _authenticator.RegisterNewUser(newUser, password);
+                var newUser = new User { FirstName = firstName, LastName = lastName, Email = email };
+                response.Data["user"] = newUser;
 
-                response.Message = success 
-                    ? "User registered successfully." 
-                    : "Error: Unable to register user.";
+                if (!_authenticator.UserExists(email))
+                {
+                    var success = _authenticator.RegisterNewUser(newUser, password);
+
+                    response.Message = success
+                        ? "User registered successfully."
+                        : "Error: Unable to register user.";
+                }
+                else
+                {
+                    response.Message = "Error: User already exists.";
+                }
             }
             else
             {
-                response.Message = "Error: User already exists.";
+                response.Message = "Invalid submission. All parameters required.";
             }
 
             return response;

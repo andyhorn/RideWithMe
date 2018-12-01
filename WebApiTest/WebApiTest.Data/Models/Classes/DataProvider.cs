@@ -39,24 +39,36 @@ namespace WebApiTest.Data.Models.Classes
             }
         }
 
-        private SqlDataReader RunReader(string connectionString)
+        private DataTableReader RunReader(string connectionString)
         {
             var sqlCommand = new SqlCommand(connectionString, _connection);
+            var adapter = new SqlDataAdapter(sqlCommand);
+            var dataSet = new DataSet();
 
             using (OpenConnection())
             {
-                var result = sqlCommand.ExecuteReader();
-                return result;
+                //var reader = sqlCommand.ExecuteReader();
+                adapter.Fill(dataSet);
+                return dataSet.CreateDataReader();
             }
         }
 
-        private void RunNonQuery(string connectionString)
+        private bool RunNonQuery(string connectionString)
         {
             var sqlCommand = new SqlCommand(connectionString, _connection);
 
-            using (OpenConnection())
+            try
             {
-                sqlCommand.ExecuteNonQuery();
+                using (OpenConnection())
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 
@@ -118,18 +130,25 @@ namespace WebApiTest.Data.Models.Classes
         {
             var sqlCommandString = $"SELECT * FROM Users WHERE UserId = {userId};";
 
-            var results = RunReader(sqlCommandString);
+            //var results = RunReader(sqlCommandString);
 
-            return results.Read()
-                ? new User
-                {
-                    Id = results.GetInt32(0),
-                    FirstName = results.GetString(1),
-                    LastName = results.GetString(2),
-                    Email = results.GetString(3),
-                    UserType = results.GetInt32(4)
-                }
-                : null;
+            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+
+            using (OpenConnection())
+            {
+                var results = sqlCommand.ExecuteReader();
+
+                return results.Read()
+                    ? new User
+                    {
+                        Id = results.GetInt32(0),
+                        FirstName = results.GetString(1),
+                        LastName = results.GetString(2),
+                        Email = results.GetString(3),
+                        UserType = results.GetInt32(4)
+                    }
+                    : null;
+            }
         }
 
         private IVehicle GetVehicleById(long vehicleId)
@@ -137,6 +156,7 @@ namespace WebApiTest.Data.Models.Classes
             var sqlCommandString = $"SELECT * FROM Vehicles WHERE VehicleId = {vehicleId};";
 
             var results = RunReader(sqlCommandString);
+           //var table = results.Tables[0];
 
             return results.Read()
                 ? new Vehicle
@@ -264,7 +284,7 @@ namespace WebApiTest.Data.Models.Classes
         public List<IRide> GetRidesByUserId(long userId)
         {
             var sqlCommandString = $"SELECT * FROM Rides r WHERE r.UserId = {userId};";
-            SqlDataReader results = RunReader(sqlCommandString);
+            var results = RunReader(sqlCommandString);
 
 
             if (results.HasRows)
@@ -273,7 +293,7 @@ namespace WebApiTest.Data.Models.Classes
 
                 while (results.Read())
                 {
-                    rideHistory.Add(new Ride
+                    rideHistory.Add(new Ride()
                     {
                         Id = results.GetInt32(0),
                         Rider = GetUserById(results.GetInt32(1)),
@@ -450,12 +470,11 @@ namespace WebApiTest.Data.Models.Classes
 
         public void AddNewRide(IRide ride)
         {
-            // TODO: Implement AddNewRide
             var sqlCommandString =
                 "INSERT INTO Rides (DriverId, RiderId, VehicleId, PickupLocation, "
                 + "Destination, RequestTime, StartTime, EndTime, Distance) "
                 + $"VALUES (NULL, {ride.Rider.Id}, NULL,"
-                + $" '{ride.PickupLocation}', '{ride.Destination}', {ride.RequestTime},"
+                + $" '{ride.PickupLocation}', '{ride.Destination}', '{ride.RequestTime}',"
                 + $" NULL, NULL, NULL);";
 
             RunNonQuery(sqlCommandString);
