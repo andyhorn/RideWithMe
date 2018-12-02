@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+    //var user = ViewBag.User;
+}
+
+<div class="jumbotron jumbotron-fluid border-bottom border-dark">
+    <div class="container-fluid text-center">
+        <h2 class="display-2">Welcome!</h2>
+        <h5>We're glad you're joining us!</h5>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-2 col-4">
+            <p>Please enter your full legal name, your email address, and a secure password.</p>
+            <p>You can also choose if you'd like to register as a Rider or a Driver.</p>
+        </div>
+        <div class="col-4">
+            <p>As a Rider, you can submit new Ride Requests and view your Ride History.</p>
+            <p>As a Driver, you can search for and accept new Ride Requests, as well as view your Ride History.</p>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+
+@using (Html.BeginForm("RegisterUser", "Home", FormMethod.Get))
+{
+    <div class="container p-3 mx-auto mb-3">
+        <div class="row align-items-center justify-content-around">
+            <div class="col-5">
+                <div class="form-group">
+                    <div class="row justify-content-between">
+                        <label for="FirstName">First name</label>
+                        <input type="text" class="form-control" name="FirstName" id="FirstName" placeholder="First name"/>
+                    </div>
+                    <div class="row justify-content-between">
+                        <label for="LastName">Last name</label>
+                        <input type="text" class="form-control" name="LastName" id="LastName" placeholder="Last name"/>
+                    </div>
+                    <div class="row justify-content-between">
+                        <label for="Email">Email</label>
+                        <input type="email" class="form-control" name="Email" id="Email" placeholder="email@domain.com"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="form-group">
+                    <div class="row justify-content-between">
+                        <label for="Password">Password</label>
+                        <input type="password" class="form-control" id="PasswordVerify" name="Password"/>
+                    </div>
+                    <div class="row justify-content-between">
+                        <label for="PasswordVerify">Verify password</label>
+                        <input type="password" class="form-control" id="PasswordVerify" name="PasswordVerify"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row justify-content-between">
+                        <label for="UserType">Account type</label>
+                        <select class="form-control" id="UserType" name="UserType">
+                            <option selected value="Rider">Rider</option>
+                            <option value="Driver">Driver</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <input type="submit" id="Submit" class="btn-primary" value="Register"/>
+                </div>
+            </div>
+        </div>
+    </div>
+}
