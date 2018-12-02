@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using RideWithMeWebApp.Models.Classes;
@@ -15,15 +14,10 @@ namespace RideWithMeWebApp.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private IUser _currentUser;
-        private static readonly HttpClient client = new HttpClient();
 
-        private const string URL = "https://ridewithmeapp.azurewebsites.net/api/";
+        private static readonly HttpClient Client = new HttpClient();
 
-        public HomeController()
-        {
-            _currentUser = null;
-        }
+        private const string ApiUrl = "https://ridewithmeapp.azurewebsites.net/api/";
 
         public ActionResult Index()
         {
@@ -68,7 +62,7 @@ namespace RideWithMeWebApp.Web.Controllers
             var email = Request.QueryString["Email"];
             var password = Request.QueryString["Password"];
 
-            var result = GetResponse(URL + $"login?email={email}&password={password}");
+            var result = GetResponse(ApiUrl + $"login?email={email}&password={password}");
             if (result != null && result.Message == "Success!")
             {
                 var user = JsonConvert.DeserializeObject<User>(result.Data["user"].ToString());
@@ -99,9 +93,9 @@ namespace RideWithMeWebApp.Web.Controllers
                 {"Password", password}
             };
 
-            var url = URL + "register";
+            var url = ApiUrl + "register";
             var serializedContent = new FormUrlEncodedContent(content);
-            var response = await client.PostAsync(url, serializedContent);
+            var response = await Client.PostAsync(url, serializedContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -168,12 +162,12 @@ namespace RideWithMeWebApp.Web.Controllers
             try
             {
                 //bool success = true;
-                //content.ForEach(async req => await UpdateHandler(URL + "update", req));
+                //content.ForEach(async req => await UpdateHandler(ApiUrl + "update", req));
 
                 var results = new Dictionary<string, bool>();
                 foreach (var req in content)
                 {
-                    var success = await UpdateHandler(URL + "update", req);
+                    var success = await UpdateHandler(ApiUrl + "update", req);
                     results.Add(req["Param"], success);
                     if (success)
                         UpdateCurrentUser(req["Param"], req["NewValue"]);
@@ -212,7 +206,7 @@ namespace RideWithMeWebApp.Web.Controllers
         private async Task<bool> UpdateHandler(string url, Dictionary<string, string> content)
         {
             var serializedContent = new FormUrlEncodedContent(content);
-            var response = await client.PostAsync(url, serializedContent);
+            var response = await Client.PostAsync(url, serializedContent);
 
             return response.IsSuccessStatusCode;
         }
@@ -221,17 +215,20 @@ namespace RideWithMeWebApp.Web.Controllers
         {
             var user = Session["user"] as IUser;
 
-            switch (param)
+            if (user != null)
             {
-                case "FirstName":
-                    user.FirstName = value;
-                    break;
-                case "LastName":
-                    user.LastName = value;
-                    break;
-                case "Email":
-                    user.Email = value;
-                    break;
+                switch (param)
+                {
+                    case "FirstName":
+                        user.FirstName = value;
+                        break;
+                    case "LastName":
+                        user.LastName = value;
+                        break;
+                    case "Email":
+                        user.Email = value;
+                        break;
+                }
             }
 
             Session["user"] = user;
