@@ -18,6 +18,7 @@ namespace RideWithMeWebApp.Api.Controllers
         }
 
         // Get user based on login
+        // TODO: Convert login to a POST request for higher security
         [HttpGet]
         public WebResponse Get(string email, string password)
         {

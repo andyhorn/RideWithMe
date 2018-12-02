@@ -64,33 +64,41 @@ namespace RideWithMeWebApp.Api.Controllers
         [HttpGet("test")]
         public IRide Get()
         {
-            var newRide = new Ride();
-            newRide.Rider = new User
-                {FirstName = "Andy", LastName = "Horn", Email = "andyjhorn@gmail.com", Id = 1, UserType = 0};
-            newRide.Driver = new User
+            var newRide = new Ride
             {
-                FirstName = "Krystal",
-                LastName = "Cruz",
-                Email = "kcruz191@gmail.com",
-                Id = 2,
-                UserType = 1
+                Rider = new User
+                {
+                    FirstName = "Andy",
+                    LastName = "Horn",
+                    Email = "andyjhorn@gmail.com",
+                    Id = 1,
+                    UserType = 0
+                },
+                Driver = new User
+                {
+                    FirstName = "Krystal",
+                    LastName = "Cruz",
+                    Email = "kcruz191@gmail.com",
+                    Id = 2,
+                    UserType = 1
+                },
+                Vehicle = new Vehicle()
+                {
+                    Color = "White",
+                    Driver = null,
+                    Id = 1,
+                    License = "771JJA",
+                    Make = "Hyundai",
+                    Model = "Elantra",
+                    Year = 2012
+                },
+                Destination = "Portland, OR",
+                Distance = 15.0,
+                RequestTime = new DateTime(2018, 11, 30),
+                StartTime = new DateTime(2018, 11, 30),
+                EndTime = new DateTime(2018, 11, 30),
+                PickupLocation = "Wilsonville, OR"
             };
-            newRide.Vehicle = new Vehicle()
-            {
-                Color = "White",
-                Driver = null,
-                Id = 1,
-                License = "771JJA",
-                Make = "Hyundai",
-                Model = "Elantra",
-                Year = 2012
-            };
-            newRide.Destination = "Portland, OR";
-            newRide.Distance = 15.0;
-            newRide.RequestTime = new DateTime(2018, 11, 30);
-            newRide.StartTime = new DateTime(2018, 11, 30);
-            newRide.EndTime = new DateTime(2018, 11, 30);
-            newRide.PickupLocation = "Wilsonville, OR";
 
             return newRide;
         }

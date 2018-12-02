@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using RideWithMeWebApp.DataProvider.Models.Interfaces;
 
 namespace RideWithMeWebApp.Api.Controllers
@@ -15,23 +17,33 @@ namespace RideWithMeWebApp.Api.Controllers
         }
 
         [HttpPut, HttpPost]
-        public void Post(long targetId, string targetTable, string param, string newValue)
+        [ProducesResponseType(200), ProducesResponseType(400)]
+        public IActionResult Post([FromForm] Dictionary<string, string> content)
         {
+            var targetTable = content["TargetTable"];
+            var targetId = Convert.ToInt32(content["TargetId"]);
+            var param = content["Param"];
+            var newValue = content["NewValue"];
+            var ok = false;
                 switch (targetTable)
                 {
-                    case "users":
-                        _dataProvider.UpdateUser(targetId, param, newValue);
+                    case "Users":
+                        ok = _dataProvider.UpdateUser(targetId, param, newValue);
                         break;
-                    case "vehicles":
-                        _dataProvider.UpdateVehicle(targetId, param, newValue);
+                    case "Vehicles":
+                        ok = _dataProvider.UpdateVehicle(targetId, param, newValue);
                         break;
-                    case "rides":
-                        _dataProvider.UpdateRide(targetId, param, newValue);
+                    case "Rides":
+                        ok = _dataProvider.UpdateRide(targetId, param, newValue);
                         break;
-                    case "logins":
-                        _dataProvider.UpdateLogin(targetId, param, newValue);
+                    case "Logins":
+                        ok = _dataProvider.UpdateLogin(targetId, param, newValue);
                         break;
                 }
+
+            if (ok)
+                return Ok();
+            return BadRequest();
         }
     }
 }

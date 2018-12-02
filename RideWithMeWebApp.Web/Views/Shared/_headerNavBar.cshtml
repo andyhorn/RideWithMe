@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar mr-auto">
                 @{
-                    var user = ViewBag.User as IUser;
+                    var user = Session["user"] as IUser;
                     if (user != null)
                     {
                         if (user.UserType == 0) // Rider

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using RideWithMeWebApp.Authentication.Classes;
 using RideWithMeWebApp.Authentication.Interfaces;
 using RideWithMeWebApp.DataProvider.Models.Interfaces;
 using RideWithMeWebApp.Models.Classes;
+using RideWithMeWebApp.Models.Interfaces;
 
 namespace RideWithMeWebApp.Api.Controllers
 {
@@ -19,9 +22,16 @@ namespace RideWithMeWebApp.Api.Controllers
         }
 
         [HttpPost]
-        public WebResponse Post(string firstName, string lastName, string email, string password)
+        [ProducesResponseType(200), ProducesResponseType(400)]
+        public ActionResult Post([FromForm] Dictionary<string, string> data)
         {
-            var response = new WebResponse();
+            var firstName = data["FirstName"];
+            var lastName = data["LastName"];
+            var email = data["Email"];
+            var password = data["Password"];
+            var userType = Convert.ToInt32(data["UserType"]);
+
+            //var response = new WebResponse();
             if (!string.IsNullOrEmpty(firstName)
                 && !string.IsNullOrEmpty(lastName)
                 && !string.IsNullOrEmpty(email)
@@ -34,36 +44,25 @@ namespace RideWithMeWebApp.Api.Controllers
                     {
                         FirstName = firstName,
                         LastName = lastName,
-                        Email = email
+                        Email = email,
+                        UserType = userType
                     }, password);
 
                     if (success)
                     {
-                        var newUser = _authenticator.GetUser(email, password);
-                        response.Message = "User registered successfully.";
-                        response.Data["user"] = newUser;
-                    }
-                    else
-                    {
-                        response.Message = "Error: Unable to register user.";
+                        return Ok();
+                        // TODO: Clean up RegisterController
+                        // TODO: Make all controllers return easy to deserialize (and expected) objects.
                     }
 
-                    //response.Message = success
-                    //    ? "User registered successfully."
-                    //    : "Error: Unable to register user.";
-                    //response.Data["user"] = newUser;
+                    return BadRequest();
                 }
-                else // Indicate the user already exists
-                {
-                    response.Message = "Error: User already exists.";
-                }
+
+                return BadRequest();
             }
-            else // Cannot register without all required parameters
-            {
-                response.Message = "Invalid submission. All parameters required.";
-            }
-            
-            return response;
+
+            return BadRequest();
         }
+
     }
 }

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using RideWithMeWebApp.Models.Classes;
@@ -25,12 +27,13 @@ namespace RideWithMeWebApp.Web.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.User = Session["user"];
             return View();
         }
 
         public ActionResult Login()
         {
-            if (_currentUser == null)
+            if (Session["user"] == null)
             {
                 return View();
             }
@@ -39,10 +42,7 @@ namespace RideWithMeWebApp.Web.Controllers
 
         public ActionResult Logout()
         {
-            _currentUser = null;
-            ViewBag.User = null;
-            ViewBag.Vehicles = null;
-            ViewBag.Rides = null;
+            Session.Clear();
 
             return RedirectToAction("Index");
         }
@@ -50,7 +50,18 @@ namespace RideWithMeWebApp.Web.Controllers
 
         public ActionResult Register()
         {
+            if (Session["user"] != null)
+            {
+                return View("Index");
+            }
             return View();
+        }
+
+        public ActionResult Account()
+        {
+            if (Session["user"] != null)
+                return View();
+            return View("Login");
         }
         public ActionResult SubmitLogin()
         {
@@ -61,9 +72,9 @@ namespace RideWithMeWebApp.Web.Controllers
             if (result != null && result.Message == "Success!")
             {
                 var user = JsonConvert.DeserializeObject<User>(result.Data["user"].ToString());
-                ViewBag.Status = 0;
-                ViewBag.User = user;
-                _currentUser = user;
+                //ViewBag.Status = 0;
+                //ViewBag.User = user;
+                Session["user"] = user;
                 return View("Index");
             }
 
@@ -79,39 +90,105 @@ namespace RideWithMeWebApp.Web.Controllers
             var lastName = Request.QueryString["LastName"];
             var userType = Request.QueryString["UserType"] == "Rider" ? 0 : 1;
 
-            //var newUser = new User
-            //{
-            //    Email = email,
-            //    FirstName = firstName,
-            //    LastName = lastName,
-            //    UserType = userType
-            //};
             var content = new Dictionary<string, string>
             {
-                {"firstName", firstName},
-                {"lastName", lastName},
-                {"email", email},
-                //{"userType", userType.ToString()},
-                {"password", password}
+                {"FirstName", firstName},
+                {"LastName", lastName},
+                {"Email", email},
+                {"UserType", userType.ToString()},
+                {"Password", password}
             };
 
             var url = URL + "register";
-            //var content = JsonConvert.SerializeObject(newUser);
             var serializedContent = new FormUrlEncodedContent(content);
             var response = await client.PostAsync(url, serializedContent);
 
             if (response.IsSuccessStatusCode)
             {
-                var newUser = new User
-                {
-                    Email = email,
-                    FirstName = firstName,
-                    LastName = lastName,
-                    UserType = userType
-                };
-                ViewBag.User = newUser;
+                return SubmitLogin();
             }
-            return RedirectToAction("Index");
+            return View("Register");
+        }
+
+        public async Task<ActionResult> UpdateUser()
+        {
+            var email = Request.QueryString["Email"];
+            var password = Request.QueryString["Password"];
+            var firstName = Request.QueryString["FirstName"];
+            var lastName = Request.QueryString["LastName"];
+            //var success = false;
+            var userId = (Session["user"] as IUser)?.Id;
+
+            var content = new List<Dictionary<string, string>>();
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                content.Add(new Dictionary<string, string>()
+                {
+                    { "TargetId", userId.ToString() },
+                    { "TargetTable", "Users" },
+                    { "Param", "Email" },
+                    { "NewValue", email }
+                });
+            }
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                content.Add(new Dictionary<string, string>()
+                {
+                    { "TargetId", userId.ToString() },
+                    { "TargetTable", "Logins" },
+                    { "Password", "password" }
+                });
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                content.Add(new Dictionary<string, string>()
+                {
+                    { "TargetId", userId.ToString() },
+                    { "TargetTable", "Users" },
+                    { "Param", "FirstName" },
+                    { "NewValue", firstName }
+                });
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                content.Add(new Dictionary<string, string>()
+                {
+                    { "TargetId", userId.ToString() },
+                    { "TargetTable", "Users" },
+                    { "Param", "LastName" },
+                    { "NewValue", lastName }
+                });
+            }
+
+            try
+            {
+                //bool success = true;
+                //content.ForEach(async req => await UpdateHandler(URL + "update", req));
+
+                var results = new Dictionary<string, bool>();
+                foreach (var req in content)
+                {
+                    var success = await UpdateHandler(URL + "update", req);
+                    results.Add(req["Param"], success);
+                    if (success)
+                        UpdateCurrentUser(req["Param"], req["NewValue"]);
+                }
+
+                ViewBag.Updated = true;
+                ViewBag.Success = true;
+                ViewBag.Results = results;
+                return View("Account");
+            }
+            catch (Exception)
+            {
+                ViewBag.Success = false;
+            }
+
+            return View("Account");
         }
 
         private Models.WebResponse GetResponse(string url)
@@ -129,6 +206,34 @@ namespace RideWithMeWebApp.Web.Controllers
             }
 
             return null;
+        }
+
+        private async Task<bool> UpdateHandler(string url, Dictionary<string, string> content)
+        {
+            var serializedContent = new FormUrlEncodedContent(content);
+            var response = await client.PostAsync(url, serializedContent);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        private void UpdateCurrentUser(string param, string value)
+        {
+            var user = Session["user"] as IUser;
+
+            switch (param)
+            {
+                case "FirstName":
+                    user.FirstName = value;
+                    break;
+                case "LastName":
+                    user.LastName = value;
+                    break;
+                case "Email":
+                    user.Email = value;
+                    break;
+            }
+
+            Session["user"] = user;
         }
     }
 }

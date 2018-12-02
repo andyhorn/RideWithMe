@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Register";
     Layout = "~/Views/Shared/_myLayoutPage.cshtml";
-    //var user = ViewBag.User;
 }
 
 <div class="jumbotron jumbotron-fluid border-bottom border-dark">
@@ -49,13 +48,16 @@
                 <div class="form-group">
                     <div class="row justify-content-between">
                         <label for="Password">Password</label>
-                        <input type="password" class="form-control" id="PasswordVerify" name="Password"/>
+                        <input type="password" class="form-control" id="Password" name="Password"/>
                     </div>
                     <div class="row justify-content-between">
                         <label for="PasswordVerify">Verify password</label>
                         <input type="password" class="form-control" id="PasswordVerify" name="PasswordVerify"/>
                     </div>
                 </div>
+                @{// TODO: Validate passwords against each other
+                  // TODO: Validate all fields are filled before allowing submission
+                  }
                 <div class="form-group">
                     <div class="row justify-content-between">
                         <label for="UserType">Account type</label>

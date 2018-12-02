@@ -14,7 +14,7 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             _sqlConnectionString = sqlConnectionString;
         }
 
-        public void UpdateUser(long targetId, string param, string newValue)
+        public bool UpdateUser(long targetId, string param, string newValue)
         {
             string sqlCommandString;
             if (param == "UserType")
@@ -30,13 +30,12 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
 
             _connection.ConnectionString = _sqlConnectionString;
             _connection.Open();
-
-            sqlCommand.ExecuteNonQuery();
-
+            var success = sqlCommand.ExecuteNonQuery() > 0;
             _connection.Close();
+            return success;
         }
 
-        public void UpdateRide(long targetId, string param, string newValue)
+        public bool UpdateRide(long targetId, string param, string newValue)
         {
             var sqlCommandString = $"UPDATE Rides SET {param}  = ";
             if (param == "DriverId" || param == "RiderId" || param == "VehicleId")
@@ -63,12 +62,12 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             _connection.ConnectionString = _sqlConnectionString;
             _connection.Open();
 
-            sqlCommand.ExecuteNonQuery();
-
+            var success = sqlCommand.ExecuteNonQuery();
             _connection.Close();
+            return success > 0;
         }
 
-        public void UpdateVehicle(long targetId, string param, string newValue)
+        public bool UpdateVehicle(long targetId, string param, string newValue)
         {
             var sqlCommandString = $"UPDATE Vehicles SET {param} = ";
 
@@ -88,12 +87,12 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             _connection.ConnectionString = _sqlConnectionString;
             _connection.Open();
 
-            sqlCommand.ExecuteNonQuery();
-
+            var success = sqlCommand.ExecuteNonQuery();
             _connection.Close();
+            return success > 0;
         }
 
-        public void UpdateLogin(long targetId, string param, string newValue)
+        public bool UpdateLogin(long targetId, string param, string newValue)
         {
             var sqlCommandString = $"UPDATE Logins SET Hash = '{newValue}; WHERE LoginId = {targetId};";
             
@@ -102,9 +101,9 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             _connection.ConnectionString = _sqlConnectionString;
             _connection.Open();
 
-            sqlCommand.ExecuteNonQuery();
-
+            var success = sqlCommand.ExecuteNonQuery();
             _connection.Close();
+            return success > 0;
         }
     }
 }

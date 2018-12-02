@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Web.Helpers;
 using RideWithMeWebApp.Authentication.Interfaces;
 using RideWithMeWebApp.DataProvider.Models.Interfaces;
@@ -70,6 +72,18 @@ namespace RideWithMeWebApp.Authentication.Classes
             {
                 return false;
             }
+        }
+
+        public IDictionary<string, string> GetNewLogin(string password)
+        {
+            var salt = Crypto.GenerateSalt();
+            var passwordAndSalt = password + salt;
+            var hashKey = Crypto.HashPassword(passwordAndSalt);
+            return new Dictionary<string, string>
+            {
+                {"Salt", salt},
+                {"HashKey", hashKey}
+            };
         }
     }
 }

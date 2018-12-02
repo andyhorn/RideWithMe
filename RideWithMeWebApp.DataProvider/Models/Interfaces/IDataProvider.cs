@@ -15,10 +15,10 @@ namespace RideWithMeWebApp.DataProvider.Models.Interfaces
         string GetFirstNameByEmail(string email);
         string GetLastNameByEmail(string email);
 
-        void UpdateUser(long targetId, string param, string newValue);
-        void UpdateVehicle(long targetId, string param, string newValue);
-        void UpdateRide(long targetId, string param, string newValue);
-        void UpdateLogin(long targetId, string param, string newValue);
+        bool UpdateUser(long targetId, string param, string newValue);
+        bool UpdateVehicle(long targetId, string param, string newValue);
+        bool UpdateRide(long targetId, string param, string newValue);
+        bool UpdateLogin(long targetId, string param, string newValue);
 
         List<IRide> GetRidesByUserId(long userId);
         List<IRide> GetRidesById(long rideId);

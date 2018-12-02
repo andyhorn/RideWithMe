@@ -1,11 +1,13 @@
-﻿@using RideWithMeWebApp.Models.Interfaces
+﻿@using RideWithMeWebApp.Models.Classes
+@using RideWithMeWebApp.Models.Interfaces
 @{
+    // TODO: Users are logged out when returning to the Index page.
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_myLayoutPage.cshtml";
     IUser user = null;
-    if (ViewBag.User != null)
+    if (Session["user"] != null)
     {
-        user = ViewBag.User;
+        user = Session["user"] as User;
     }
 }
 <div class="jumbotron">

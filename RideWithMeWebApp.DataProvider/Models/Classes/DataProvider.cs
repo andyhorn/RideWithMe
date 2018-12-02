@@ -143,7 +143,7 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
         {
             var sqlCommandString =
                 $"EXEC dbo.sp_AddNewUser '{newUser.FirstName}', '{newUser.LastName}', "
-                + $"'{newUser.Email}', '{salt}', '{hash}';";
+                + $"'{newUser.Email}', '{salt}', '{hash}', {newUser.UserType};";
 
             RunNonQuery(sqlCommandString);
 
@@ -274,24 +274,24 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             return RunNonQuery(sqlCommandString);
         }
 
-        public void UpdateUser(long targetId, string param, string newValue)
+        public bool UpdateUser(long targetId, string param, string newValue)
         {
-            _updateHandler.UpdateUser(targetId, param, newValue);
+            return _updateHandler.UpdateUser(targetId, param, newValue);
         }
 
-        public void UpdateVehicle(long targetId, string param, string newValue)
+        public bool UpdateVehicle(long targetId, string param, string newValue)
         {
-            _updateHandler.UpdateVehicle(targetId, param, newValue);
+            return _updateHandler.UpdateVehicle(targetId, param, newValue);
         }
 
-        public void UpdateRide(long targetId, string param, string newValue)
+        public bool UpdateRide(long targetId, string param, string newValue)
         {
-            _updateHandler.UpdateRide(targetId, param, newValue);
+            return _updateHandler.UpdateRide(targetId, param, newValue);
         }
 
-        public void UpdateLogin(long targetId, string param, string newValue)
+        public bool UpdateLogin(long targetId, string param, string newValue)
         {
-            _updateHandler.UpdateLogin(targetId, param, newValue);
+            return _updateHandler.UpdateLogin(targetId, param, newValue);
         }
     }
 }

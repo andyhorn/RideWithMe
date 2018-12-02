@@ -1,4 +1,6 @@
-﻿using RideWithMeWebApp.Models.Interfaces;
+﻿using System.Collections;
+using System.Collections.Generic;
+using RideWithMeWebApp.Models.Interfaces;
 
 namespace RideWithMeWebApp.Authentication.Interfaces
 {
@@ -8,5 +10,7 @@ namespace RideWithMeWebApp.Authentication.Interfaces
         IUser GetUser(string email, string password);
         bool UserExists(string email);
         bool RegisterNewUser(IUser newUser, string password);
+
+        IDictionary<string, string> GetNewLogin(string password);
     }
 }

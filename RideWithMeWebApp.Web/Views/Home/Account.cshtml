@@ -1,0 +1,113 @@
+﻿@using RideWithMeWebApp.Models.Classes
+@using RideWithMeWebApp.Models.Interfaces
+
+@{
+    ViewBag.Title = "Account";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+    IUser user = Session["user"] as User;
+    if (ViewBag.Updated != null)
+    {
+        bool updateSuccess = ViewBag.Success;
+        Dictionary<string, bool> results = ViewBag.Results;
+    }
+}
+
+<h2>Account Management</h2>
+
+@{
+    if (user != null) // Successfully logged in
+    {
+            <div class="container-fluid container">
+                <div class="row">
+                    <div class="col-6 container">
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-borderless table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="row">Your details</th>
+                                    </tr>
+                                    </thead>
+                                    <tr>
+                                        <td>
+                                            <p>First name:</p></td>
+                                        <td>
+                                            <p>@user.FirstName</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Last name:</p></td>
+                                        <td>
+                                            <p>@user.LastName</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Email:</p></td>
+                                        <td>
+                                            <p>@user.Email</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Status:</p></td>
+                                        <td>
+                                            <p>@(user.UserType == 0
+                                                     ? "Rider"
+                                                     : user.UserType == 1
+                                                         ? "Driver"
+                                                         : "Administrator")</p></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 container">
+                        <div class="row">
+                            <div class="col">
+                                @using (Html.BeginForm("UpdateUser", "Home", FormMethod.Get))
+                                {
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="row">Make changes</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>First name:</td>
+                                            <td>@Html.TextBox("FirstName")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last name:</td>
+                                            <td>@Html.TextBox("LastName")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email:</td>
+                                            <td>@Html.TextBox("Email")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Password:</td>
+                                            <td>@Html.Password("Password")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Verify password:</td>
+                                            <td>@Html.Password("VerifyPassword")</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><input type="submit" id="Submit" class="btn btn-primary" name="UpdateUser" value="Save"/></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    else // Not currently logged in
+    {
+        <div class="jumbotron jumbotron-fluid">
+            <h2>Please @Html.ActionLink("Login", "Login", "Home") or @Html.ActionLink("Register", "Register", "Home") to view this page.</h2>
+        </div>
+    }
+}
