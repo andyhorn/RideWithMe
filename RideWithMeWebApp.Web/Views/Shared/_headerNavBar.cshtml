@@ -1,4 +1,5 @@
 ﻿@using RideWithMeWebApp.Models.Classes
+@using RideWithMeWebApp.Models.Interfaces
 @model RideWithMeWebApp.Models.Interfaces.IUser
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -9,28 +10,63 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar mr-auto">
                 @{
-                    if (Model.UserType == 0) // Rider
+                    var user = ViewBag.User as IUser;
+                    if (user != null)
                     {
-                        <a class="nav-link">@Html.ActionLink("New Request", "NewRequest", "Home")</a>
-                        <a class="nav-link">@Html.ActionLink("History", "History", "Home")</a>
-                    }
-                    else if (Model.UserType == 1) // Driver
-                    {
-                        <a class="nav-link">@Html.ActionLink("Requests", "GetRequests", "Home")</a>
-                        <a class="nav-link">@Html.ActionLink("Vehicles", "Vehicles", "Home")</a>
-                    }
-                    else if (Model.UserType == 2) // Admin
-                    {
-                        <a class="nav-link">@Html.ActionLink("Users", "AdminUsers", "Home")</a>
-                        <a class="nav-link">@Html.ActionLink("Rides", "AdminRides", "Home")</a>
-                        <a class="nav-link">@Html.ActionLink("Vehicles", "AdminVehicles", "Home")</a>
+                        if (user.UserType == 0) // Rider
+                        {
+                            <a class="nav-link">@Html.ActionLink("New Request", "NewRequest", "Home")</a>
+                            <a class="nav-link">@Html.ActionLink("History", "History", "Home")</a>
+                        }
+                        else if (user.UserType == 1) // Driver
+                        {
+                            <a class="nav-link">@Html.ActionLink("Requests", "GetRequests", "Home")</a>
+                            <a class="nav-link">@Html.ActionLink("Vehicles", "Vehicles", "Home")</a>
+                        }
+                        else if (user.UserType == 2) // Admin
+                        {
+                            <a class="nav-link">@Html.ActionLink("Users", "AdminUsers", "Home")</a>
+                            <a class="nav-link">@Html.ActionLink("Rides", "AdminRides", "Home")</a>
+                            <a class="nav-link">@Html.ActionLink("Vehicles", "AdminVehicles", "Home")</a>
+                        }
                     }
                 }
             </div>
-            <div class="navbar p-0 my-auto">
-                <span class="navbar-text">Welcome, @Model.FirstName!</span>
-                <a class="nav-link">@Html.ActionLink("Account", "Account", "Home")</a>
-                <a class="nav-link">@Html.ActionLink("Logout", "Logout", "Home")</a>
-            </div>
+        <div class="navbar p-0 my-auto">
+            @{
+                if (user != null)
+                {
+                    <span class="navbar-text">Welcome, @user.FirstName!</span>
+                }
+                else
+                {
+                    <span class="navbar-text">Welcome!</span>
+                }
+            }
+            <a class="nav-link">
+                @{
+                    if (user != null)
+                    {
+                        @Html.ActionLink("Account", "Account", "Home")
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Register", "Register", "Home")
+                    }
+                }
+            </a>
+            <a class="nav-link">
+                @{
+                    if (user != null)
+                    {
+                        @Html.ActionLink("Logout", "Logout", "Home")
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Login", "Login", "Home")
+                    }
+                }
+            </a>
+        </div>
     </div>
 </nav>

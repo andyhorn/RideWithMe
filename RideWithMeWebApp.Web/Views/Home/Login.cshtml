@@ -1,0 +1,24 @@
+﻿@model RideWithMeWebApp.Models.Interfaces.IUser
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm("SubmitLogin", "Home", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td>Enter Email: </td>
+            <td>@Html.TextBox("Email")</td>
+        </tr>
+        <tr>
+            <td>Enter Password: </td>
+            <td>@Html.TextBox("Password")</td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="submit" value="Login"/></td>
+        </tr>
+    </table>
+}

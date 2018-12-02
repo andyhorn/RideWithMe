@@ -1,14 +1,31 @@
-﻿@{
+﻿@using RideWithMeWebApp.Models.Interfaces
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+    IUser user = null;
+    if (ViewBag.User != null)
+    {
+        user = ViewBag.User;
+    }
 }
 <div class="jumbotron">
     <h2>Index</h2>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <p>This is body.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <p>This is body.</p>
+        </div>
+        @{
+            if (user != null)
+            {
+                <div class="col">
+                    <p>First Name: @user.FirstName</p>
+                    <p>Last Name: @user.LastName</p>
+                    <p>Email: @user.Email</p>
+                </div>
+            }
+        }
     </div>
-
 </div>
