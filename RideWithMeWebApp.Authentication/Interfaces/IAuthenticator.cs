@@ -11,6 +11,6 @@ namespace RideWithMeWebApp.Authentication.Interfaces
         bool UserExists(string email);
         bool RegisterNewUser(IUser newUser, string password);
 
-        IDictionary<string, string> GetNewLogin(string password);
+        //IDictionary<string, string> GetNewLogin(string password);
     }
 }

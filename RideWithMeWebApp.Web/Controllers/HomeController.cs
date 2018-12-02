@@ -138,7 +138,8 @@ namespace RideWithMeWebApp.Web.Controllers
                 {
                     { "TargetId", userId.ToString() },
                     { "TargetTable", "Logins" },
-                    { "Password", "password" }
+                    { "Param", "Password" },
+                    { "NewValue", password }
                 });
             }
 

@@ -7,6 +7,7 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
     {
         private readonly SqlConnection _connection;
         private readonly string _sqlConnectionString;
+        //private readonly IAuthenticator _authenticator;
 
         public UpdateHandler(SqlConnection con, string sqlConnectionString)
         {
@@ -92,18 +93,22 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             return success > 0;
         }
 
-        public bool UpdateLogin(long targetId, string param, string newValue)
+        public bool UpdateLogin(long targetId, string salt, string hash)
         {
-            var sqlCommandString = $"UPDATE Logins SET Hash = '{newValue}; WHERE LoginId = {targetId};";
+            var sqlSaltCommandString = $"UPDATE Logins SET Salt = '{salt}' WHERE UserId = {targetId};";
+            var sqlHashCommandString = $"UPDATE Logins SET Hash = '{hash}' WHERE UserId = {targetId};";
             
-            var sqlCommand = new SqlCommand(sqlCommandString, _connection);
+            var sqlSaltCommand = new SqlCommand(sqlSaltCommandString, _connection);
+            var sqlHashCommand = new SqlCommand(sqlHashCommandString, _connection);
 
             _connection.ConnectionString = _sqlConnectionString;
             _connection.Open();
 
-            var success = sqlCommand.ExecuteNonQuery();
+            var saltSuccess = sqlSaltCommand.ExecuteNonQuery();
+            var hashSuccess = sqlHashCommand.ExecuteNonQuery();
             _connection.Close();
-            return success > 0;
+
+            return saltSuccess > 0 && hashSuccess > 0;
         }
     }
 }

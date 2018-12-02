@@ -18,7 +18,7 @@ namespace RideWithMeWebApp.DataProvider.Models.Interfaces
         bool UpdateUser(long targetId, string param, string newValue);
         bool UpdateVehicle(long targetId, string param, string newValue);
         bool UpdateRide(long targetId, string param, string newValue);
-        bool UpdateLogin(long targetId, string param, string newValue);
+        bool UpdateLogin(long targetId, string salt, string hash);
 
         List<IRide> GetRidesByUserId(long userId);
         List<IRide> GetRidesById(long rideId);

@@ -74,7 +74,7 @@ namespace RideWithMeWebApp.Authentication.Classes
             }
         }
 
-        public IDictionary<string, string> GetNewLogin(string password)
+        public static IDictionary<string, string> GetNewLogin(string password)
         {
             var salt = Crypto.GenerateSalt();
             var passwordAndSalt = password + salt;

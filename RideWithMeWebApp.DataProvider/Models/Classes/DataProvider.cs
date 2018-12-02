@@ -289,9 +289,9 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             return _updateHandler.UpdateRide(targetId, param, newValue);
         }
 
-        public bool UpdateLogin(long targetId, string param, string newValue)
+        public bool UpdateLogin(long targetId, string salt, string hash)
         {
-            return _updateHandler.UpdateLogin(targetId, param, newValue);
+            return _updateHandler.UpdateLogin(targetId, salt, hash);
         }
     }
 }

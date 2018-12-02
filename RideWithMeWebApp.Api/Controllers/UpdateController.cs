@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using RideWithMeWebApp.Authentication.Classes;
 using RideWithMeWebApp.DataProvider.Models.Interfaces;
 
 namespace RideWithMeWebApp.Api.Controllers
@@ -37,7 +38,9 @@ namespace RideWithMeWebApp.Api.Controllers
                         ok = _dataProvider.UpdateRide(targetId, param, newValue);
                         break;
                     case "Logins":
-                        ok = _dataProvider.UpdateLogin(targetId, param, newValue);
+                        var newLogin = Authenticator.GetNewLogin(newValue);
+
+                        ok = _dataProvider.UpdateLogin(targetId, newLogin["Salt"], newLogin["HashKey"]);
                         break;
                 }
 
