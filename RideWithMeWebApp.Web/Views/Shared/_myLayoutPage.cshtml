@@ -8,11 +8,11 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+@{Html.RenderPartial("_headerNavBar");}
 <div>
     @RenderBody()
 </div>
-<footer class="panel-footer">
-    @RenderSection("footer", true)
-</footer>
+    
+@{Html.RenderPartial("_footer");}
 </body>
 </html>

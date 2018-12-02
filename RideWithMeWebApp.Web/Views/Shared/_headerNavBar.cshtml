@@ -1,0 +1,36 @@
+﻿@using RideWithMeWebApp.Models.Classes
+@model RideWithMeWebApp.Models.Interfaces.IUser
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <h4><a class="navbar-brand mx-2">@Html.ActionLink("RideWithMe", "Index", "Home")</a></h4>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar mr-auto">
+                @{
+                    if (Model.UserType == 0) // Rider
+                    {
+                        <a class="nav-link">@Html.ActionLink("New Request", "NewRequest", "Home")</a>
+                        <a class="nav-link">@Html.ActionLink("History", "History", "Home")</a>
+                    }
+                    else if (Model.UserType == 1) // Driver
+                    {
+                        <a class="nav-link">@Html.ActionLink("Requests", "GetRequests", "Home")</a>
+                        <a class="nav-link">@Html.ActionLink("Vehicles", "Vehicles", "Home")</a>
+                    }
+                    else if (Model.UserType == 2) // Admin
+                    {
+                        <a class="nav-link">@Html.ActionLink("Users", "AdminUsers", "Home")</a>
+                        <a class="nav-link">@Html.ActionLink("Rides", "AdminRides", "Home")</a>
+                        <a class="nav-link">@Html.ActionLink("Vehicles", "AdminVehicles", "Home")</a>
+                    }
+                }
+            </div>
+            <div class="navbar p-0 my-auto">
+                <span class="navbar-text">Welcome, @Model.FirstName!</span>
+                <a class="nav-link">@Html.ActionLink("Account", "Account", "Home")</a>
+                <a class="nav-link">@Html.ActionLink("Logout", "Logout", "Home")</a>
+            </div>
+    </div>
+</nav>
