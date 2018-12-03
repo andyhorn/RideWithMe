@@ -4,22 +4,21 @@
     Layout = "~/Views/Shared/_myLayoutPage.cshtml";
 }
 
-<h2>Login</h2>
+<div class="jumbotron jumbotron-fluid">
+    <h2 class="text-center">Welcome! Please login or register to continue.</h2>
+</div>
+
 
 @using (Html.BeginForm("SubmitLogin", "Home", FormMethod.Get))
 {
-    // TODO: Revamp Login page using Bootstrap so it's pretty like the Register page
-    <table>
-        <tr>
-            <td>Enter Email: </td>
-            <td>@Html.TextBox("Email")</td>
-        </tr>
-        <tr>
-            <td>Enter Password: </td>
-            <td>@Html.TextBox("Password")</td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" id="submit" value="Login"/></td>
-        </tr>
-    </table>
+    <div class="form-group">
+        <label for="Email">Email address</label>
+        <input class="form-control" type="email" name="Email" id="Email"/>
+    </div>
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input class="form-control" type="password" name="Password" id="Password"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
 }
+
