@@ -21,10 +21,15 @@ namespace RideWithMeWebApp.DataProvider.Models.Interfaces
         bool UpdateRide(long targetId, string param, string newValue);
         bool UpdateLogin(long targetId, string salt, string hash);
 
-        List<IRide> GetRidesByUserId(long userId);
+        //IList<IRide> GetRidesByUserId(long userId);
+        IList<IRide> GetRidesByDriverId(long userId);
+        IList<IRide> GetRidesByRiderId(long id);
         List<IRide> GetRidesById(long rideId);
         List<IRide> GetAllRides();
 
         bool AddNewRide(IRide ride);
+
+        IList<IVehicle> GetAllVehicles();
+        IList<IVehicle> GetVehiclesByUserId(int id);
     }
 }

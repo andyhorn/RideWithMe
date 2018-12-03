@@ -1,0 +1,121 @@
+﻿@using RideWithMeWebApp.Models.Classes
+@using RideWithMeWebApp.Models.Interfaces
+@model RideWithMeWebApp.Models.Classes.User
+
+@{
+    ViewBag.Title = "EditUser";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+    IUser user = null;
+    //if (ViewBag.User != null)
+    //{ user = ViewBag.User as User; }
+    user = Model;
+}
+
+<h2>Administration - User Management - Edit User</h2>
+
+    <div class="container-fluid container">
+        <div class="row">
+            <div class="col-6 container">
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-borderless table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="row">User details</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>
+                                    <p>First name:</p>
+                                </td>
+                                <td>
+                                    <p>@user.FirstName</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Last name:</p>
+                                </td>
+                                <td>
+                                    <p>@user.LastName</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Email:</p>
+                                </td>
+                                <td>
+                                    <p>@user.Email</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Status:</p>
+                                </td>
+                                <td>
+                                    <p>
+                                        @(user.UserType == 0
+                                                      ? "Rider"
+                                                      : user.UserType == 1
+                                                          ? "Driver"
+                                                          : "Administrator")
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 container">
+            <div class="row">
+                <div class="col">
+                    @using (Html.BeginForm("UpdateUser", "Users", FormMethod.Post))
+                    {
+                        <table class="table table-borderless table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="row">Make changes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>First name:</td>
+                                <td>@Html.TextBox("FirstName", "")</td>
+                            </tr>
+                            <tr>
+                                <td>Last name:</td>
+                                <td>@Html.TextBox("LastName", "")</td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td>@Html.TextBox("Email", "")</td>
+                            </tr>
+                            <tr>
+                                <td>Password:</td>
+                                <td>@Html.Password("Password", "")</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td>
+                                    <select class="form-control">
+                                        <option selected name="Rider" value="0" id="Rider">Rider</option>
+                                        <option name="Driver" value="1" id="Driver">Driver</option>
+                                        <option name="Administrator" value="2" id="Administrator">Administrator</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="submit" id="Submit" class="btn btn-primary" name="UpdateUser" value="Save"/></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

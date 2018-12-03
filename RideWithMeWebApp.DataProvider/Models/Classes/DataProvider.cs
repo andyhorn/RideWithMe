@@ -186,9 +186,42 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             return RunScalar(sqlCommandString);
         }
 
-        public List<IRide> GetRidesByUserId(long userId)
+        public IList<IRide> GetRidesByRiderId(long id)
         {
-            var sqlCommandString = $"SELECT * FROM Rides r WHERE r.UserId = {userId};";
+            var sqlCommandString = $"SELECT * FROM Rides r WHERE r.RiderId = {id};";
+            var results = RunReader(sqlCommandString);
+
+
+            if (results.HasRows)
+            {
+                var rideHistory = new List<IRide>();
+
+                while (results.Read())
+                {
+                    rideHistory.Add(new Ride()
+                    {
+                        Id = results.GetInt32(0),
+                        Rider = GetUserById(results.GetInt32(1)),
+                        Driver = GetUserById(results.GetInt32(2)),
+                        Vehicle = GetVehicleById(results.GetInt32(3)),
+                        Destination = results.GetString(4),
+                        PickupLocation = results.GetString(5),
+                        Distance = results.GetDouble(6),
+                        RequestTime = results.GetDateTime(7),
+                        StartTime = results.GetDateTime(8),
+                        EndTime = results.GetDateTime(9)
+                    });
+                }
+
+                return rideHistory;
+            }
+
+            return null;
+        }
+
+        public IList<IRide> GetRidesByDriverId(long id)
+        {
+            var sqlCommandString = $"SELECT * FROM Rides r WHERE r.DriverId = {id};";
             var results = RunReader(sqlCommandString);
 
 
@@ -248,7 +281,6 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             }
 
             return null;
-
         }
 
         public List<IRide> GetAllRides()
@@ -296,6 +328,67 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
             return RunNonQuery(sqlCommandString);
         }
 
+        public IList<IVehicle> GetAllVehicles()
+        {
+            var sqlCommandString = "SELECT * FROM Vehicles";
+            var results = RunReader(sqlCommandString);
+
+            if (results.HasRows)
+            {
+                var collection = new List<IVehicle>();
+                while (results.Read())
+                {
+                    collection.Add(new Vehicle()
+                    {
+                        Id = results.GetInt32(0),
+                        Driver = GetUserById(results.GetInt32(1)),
+                        Year = results.GetInt32(2),
+                        Make = results.GetString(3),
+                        Model = results.GetString(4),
+                        Color = results.GetString(5),
+                        License = results.GetString(6)
+                    });
+                }
+
+                return collection;
+            }
+
+            return null;
+        }
+
+        public IList<IVehicle> GetVehiclesByUserId(int id)
+        {
+            var sqlCommandString = $"SELECT * FROM Vehicles WHERE DriverId = {id};";
+            var results = RunReader(sqlCommandString);
+
+            if (results.HasRows)
+            {
+                var collection = new List<IVehicle>();
+                while (results.Read())
+                {
+                    collection.Add(new Vehicle
+                    {
+                        Id = results.GetInt32(0),
+                        Driver = GetUserById(results.GetInt32(1)),
+                        Year = results.GetInt32(2),
+                        Make = results.GetString(3),
+                        Model = results.GetString(4),
+                        Color = results.GetString(5),
+                        License = results.GetString(6)
+                    });
+                }
+
+                return collection;
+            }
+
+            return null;
+        }
+
+        public bool UpdateLogin(long targetId, string salt, string hash)
+        {
+            return _updateHandler.UpdateLogin(targetId, salt, hash);
+        }
+
         public bool UpdateUser(long targetId, string param, string newValue)
         {
             return _updateHandler.UpdateUser(targetId, param, newValue);
@@ -309,11 +402,6 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
         public bool UpdateRide(long targetId, string param, string newValue)
         {
             return _updateHandler.UpdateRide(targetId, param, newValue);
-        }
-
-        public bool UpdateLogin(long targetId, string salt, string hash)
-        {
-            return _updateHandler.UpdateLogin(targetId, salt, hash);
         }
     }
 }

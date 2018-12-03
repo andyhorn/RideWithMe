@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using RideWithMeWebApp.DataProvider.Models.Interfaces;
 using RideWithMeWebApp.Models.Classes;
@@ -17,48 +19,61 @@ namespace RideWithMeWebApp.Api.Controllers
             _dataProvider = new DataProvider.Models.Classes.DataProvider();
         }
 
-        [HttpGet("userId/{id}")]
-        public WebResponse GetByUserId(long id)
+        [HttpGet("riderId/{id}")]
+        public IList<IRide> GetByRiderId(long id)
         {
-            var response = new WebResponse();
-            response.Data["rideHistory"] = _dataProvider.GetRidesByUserId(id);
-            return response;
+            //var response = new WebResponse();
+            //response.Data["rideHistory"] = _dataProvider.GetRidesByRiderId(id);
+            //return response;
+            var collection = _dataProvider.GetRidesByRiderId(id);
+            return collection;
+        }
+
+        [HttpGet("driverId/{id}")]
+        public IList<IRide> GetRideByDriverId(int id)
+        {
+            var collection = _dataProvider.GetRidesByDriverId(id);
+            return collection;
         }
 
         [HttpGet("rideId/{id}")]
-        public WebResponse GetByRideId(long id)
+        public IList<IRide> GetByRideId(long id)
         {
-            var response = new WebResponse();
-            response.Data["rideHistory"] = _dataProvider.GetRidesById(id);
-            return response;
+            //var response = new WebResponse();
+            //response.Data["rideHistory"] = _dataProvider.GetRidesById(id);
+            //return response;
+            var collection = _dataProvider.GetRidesById(id);
+            return collection;
         }
 
-        [HttpGet("all/")]
-        public WebResponse GetAllRides()
+        [HttpGet("all")]
+        public IList<IRide> GetAllRides()
         {
-            var response = new WebResponse();
-            var data = _dataProvider.GetAllRides();
-            if (data != null)
-            {
-                response.Message = "Success!";
-                response.Data["rideHistory"] = _dataProvider.GetAllRides();
-            }
-            else
-            {
-                response.Message = "Error: Unable to GetAllRides.";
-            }
+            //var response = new WebResponse();
+            //var data = _dataProvider.GetAllRides();
+            //if (data != null)
+            //{
+            //    response.Message = "Success!";
+            //    response.Data["rideHistory"] = _dataProvider.GetAllRides();
+            //}
+            //else
+            //{
+            //    response.Message = "Error: Unable to GetAllRides.";
+            //}
             
-            return response;
+            //return response;
+            var collection = _dataProvider.GetAllRides();
+            return collection;
         }
 
 
         [HttpPost]
-        [ProducesResponseType(200)]
-        public OkResult Post([FromBody] Ride ride)
+        [ProducesResponseType(200), ProducesResponseType(400)]
+        public ActionResult Post([FromBody] Ride ride)
         {
-            _dataProvider.AddNewRide(ride);
-
-            return Ok();
+            if(_dataProvider.AddNewRide(ride))
+                return Ok();
+            return BadRequest();
         }
 
         [HttpGet("test")]

@@ -23,7 +23,7 @@ namespace RideWithMeWebApp.Web.Controllers
                 return View();
             }
 
-            return RedirectToAction("Login");
+            return RedirectToRoute("Root");
         }
 
         private async Task<List<User>> GetAllUsers()
@@ -35,9 +35,22 @@ namespace RideWithMeWebApp.Web.Controllers
             return data;
         }
 
-        public async Task<ActionResult> EditUser(int id)
+        public async Task<ActionResult> Edit(long? id)
         {
-            return null;
+            if (Session["user"] != null && id != null)
+            {
+                var user = Session["user"] as IUser;
+                if (user.UserType == 2) // admin
+                {
+                    var url = ApiUrl + $"admin/users/{id.ToString()}";
+                    var response = await Client.GetAsync(url);
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<User>(responseData);
+                    //ViewData["user"] = data;
+                    return View(data);
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

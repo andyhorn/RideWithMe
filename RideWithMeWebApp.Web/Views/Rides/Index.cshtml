@@ -1,0 +1,92 @@
+﻿@using RideWithMeWebApp.Models.Interfaces
+@model IEnumerable<RideWithMeWebApp.Models.Classes.Ride>
+
+@{
+    ViewBag.Title = "Rides";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+    var user = Session["user"] as IUser;
+}
+
+<h2>Rides</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Destination)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Distance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequestTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+    @if (ViewBag.Rides != null)
+    {
+        var collection = ViewBag.Rides as IList<IRide>;
+        foreach (var item in collection) {
+             <tr>
+                 <td>
+                     @Html.Display("Destination")
+                 </td>
+                 <td>
+                     @Html.Display("Pickup Location")
+                 </td>
+                 <td>
+                     @Html.Display("Distance")
+                 </td>
+                 <td>
+                     @Html.Display("Request Time")
+                 </td>
+                 <td>
+                     @Html.Display("Start Time")
+                 </td>
+                 <td>
+                     @Html.Display("End Time")
+                 </td>
+                 <td>
+                     @Html.Display("Status")
+                 </td>
+                 @if (user.UserType == 2)
+                 {
+                     <td>
+                         @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                         @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                         @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                     </td>
+                 }
+                 else
+                 {
+                     <td>
+                         @Html.ActionLink("Details", "Details", new { id=item.Id })
+                     </td>
+                 }
+
+             </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="8">
+                Ride history is empty.
+            </td>
+        </tr>
+    }
+</table>

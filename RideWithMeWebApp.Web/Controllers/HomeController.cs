@@ -28,6 +28,21 @@ namespace RideWithMeWebApp.Web.Controllers
             return View();
         }
 
+        public ActionResult Users()
+        {
+            return RedirectToAction("Users/Index");
+        }
+
+        public ActionResult Rides()
+        {
+            return RedirectToAction("Rides/Index");
+        }
+
+        public ActionResult Vehicles()
+        {
+            return RedirectToAction("Vehicles/Index");
+        }
+
         public ActionResult Login()
         {
             if (Session["user"] == null)
@@ -73,11 +88,11 @@ namespace RideWithMeWebApp.Web.Controllers
                 //ViewBag.Status = 0;
                 //ViewBag.User = user;
                 Session["user"] = user;
-                return View("Index");
+                return RedirectToAction("Index");
             }
 
             ViewBag.Status = -1;
-            return View("Login");
+            return RedirectToAction("Login");
         }
 
         public async Task<ActionResult> RegisterUser()
