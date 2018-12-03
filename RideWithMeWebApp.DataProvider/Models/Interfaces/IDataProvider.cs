@@ -14,6 +14,7 @@ namespace RideWithMeWebApp.DataProvider.Models.Interfaces
         IUser GetUserById(long id);
         string GetFirstNameByEmail(string email);
         string GetLastNameByEmail(string email);
+        IList<IUser> GetAllUsers();
 
         bool UpdateUser(long targetId, string param, string newValue);
         bool UpdateVehicle(long targetId, string param, string newValue);

@@ -112,6 +112,28 @@ namespace RideWithMeWebApp.DataProvider.Models.Classes
                 : null;
         }
 
+        public IList<IUser> GetAllUsers()
+        {
+            var collection = new List<IUser>();
+
+            var sqlCommandString = "SELECT * FROM Users ORDER BY FirstName, LastName;";
+            var results = RunReader(sqlCommandString);
+
+            while (results.Read())
+            {
+                collection.Add(new User()
+                {
+                    Id = results.GetInt32(0),
+                    FirstName = results.GetString(1),
+                    LastName = results.GetString(2),
+                    Email = results.GetString(3),
+                    UserType = results.GetInt32(4)
+                });
+            }
+
+            return collection;
+        }
+
         private IVehicle GetVehicleById(long vehicleId)
         {
             var sqlCommandString = $"SELECT * FROM Vehicles WHERE VehicleId = {vehicleId};";

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using RideWithMeWebApp.Models.Classes;
@@ -16,8 +19,8 @@ namespace RideWithMeWebApp.Web.Controllers
     {
 
         private static readonly HttpClient Client = new HttpClient();
-
         private const string ApiUrl = "https://ridewithmeapp.azurewebsites.net/api/";
+        //private string ApiUrl = ConfigurationManager.ConnectionStrings["apiConnection"].ConnectionString;
 
         public ActionResult Index()
         {
@@ -61,6 +64,7 @@ namespace RideWithMeWebApp.Web.Controllers
         {
             var email = Request.QueryString["Email"];
             var password = Request.QueryString["Password"];
+            ClearQueryString();
 
             var result = GetResponse(ApiUrl + $"login?email={email}&password={password}");
             if (result != null && result.Message == "Success!")
@@ -232,6 +236,16 @@ namespace RideWithMeWebApp.Web.Controllers
             }
 
             Session["user"] = user;
+        }
+
+        private void ClearQueryString()
+        {
+            PropertyInfo isreadonly = typeof(System.Collections.Specialized.NameValueCollection).GetProperty(
+                "IsReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            isreadonly.SetValue(this.Request.QueryString, false, null);
+
+            this.Request.QueryString.Clear();
         }
     }
 }
