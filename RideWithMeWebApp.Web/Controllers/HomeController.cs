@@ -180,9 +180,6 @@ namespace RideWithMeWebApp.Web.Controllers
 
             try
             {
-                //bool success = true;
-                //content.ForEach(async req => await UpdateHandler(ApiUrl + "update", req));
-
                 var results = new Dictionary<string, bool>();
                 foreach (var req in content)
                 {

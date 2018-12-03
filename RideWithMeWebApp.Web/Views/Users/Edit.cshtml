@@ -9,6 +9,7 @@
     //if (ViewBag.User != null)
     //{ user = ViewBag.User as User; }
     user = Model;
+    Session["editUser"] = user;
 }
 
 <h2>Administration - User Management - Edit User</h2>
@@ -97,7 +98,7 @@
                             <tr>
                                 <td>Status:</td>
                                 <td>
-                                    <select class="form-control">
+                                    <select class="form-control" id="Status" name="Status">
                                         <option selected name="Rider" value="0" id="Rider">Rider</option>
                                         <option name="Driver" value="1" id="Driver">Driver</option>
                                         <option name="Administrator" value="2" id="Administrator">Administrator</option>
