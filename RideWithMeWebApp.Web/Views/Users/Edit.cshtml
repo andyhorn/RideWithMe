@@ -1,13 +1,10 @@
-﻿@using RideWithMeWebApp.Models.Classes
-@using RideWithMeWebApp.Models.Interfaces
+﻿@using RideWithMeWebApp.Models.Interfaces
 @model RideWithMeWebApp.Models.Classes.User
 
 @{
     ViewBag.Title = "EditUser";
     Layout = "~/Views/Shared/_myLayoutPage.cshtml";
     IUser user = null;
-    //if (ViewBag.User != null)
-    //{ user = ViewBag.User as User; }
     user = Model;
     Session["editUser"] = user;
 }
@@ -99,7 +96,8 @@
                                 <td>Status:</td>
                                 <td>
                                     <select class="form-control" id="Status" name="Status">
-                                        <option selected name="Rider" value="0" id="Rider">Rider</option>
+                                        <option name="Empty" value="" id="null" selected></option>
+                                        <option name="Rider" value="0" id="Rider">Rider</option>
                                         <option name="Driver" value="1" id="Driver">Driver</option>
                                         <option name="Administrator" value="2" id="Administrator">Administrator</option>
                                     </select>

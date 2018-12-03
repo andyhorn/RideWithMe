@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
-using System.Web.Configuration;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using RideWithMeWebApp.Models.Classes;
@@ -28,21 +25,6 @@ namespace RideWithMeWebApp.Web.Controllers
             return View();
         }
 
-        public ActionResult Users()
-        {
-            return RedirectToAction("Users/Index");
-        }
-
-        public ActionResult Rides()
-        {
-            return RedirectToAction("Rides/Index");
-        }
-
-        public ActionResult Vehicles()
-        {
-            return RedirectToAction("Vehicles/Index");
-        }
-
         public ActionResult Login()
         {
             if (Session["user"] == null)
@@ -58,7 +40,6 @@ namespace RideWithMeWebApp.Web.Controllers
 
             return RedirectToAction("Index");
         }
-
 
         public ActionResult Register()
         {
@@ -77,16 +58,20 @@ namespace RideWithMeWebApp.Web.Controllers
         }
         public ActionResult SubmitLogin()
         {
+            // TODO: Convert this form submission to POST
+            // Use the FormCollection collection syntax to access parameters
+            // in a similar way to Request.QueryString["param"].
+
+            // TODO: STOP USING WEBRESPONSE OBJECTS!
+            // Make this method return the objects themselves.
+
             var email = Request.QueryString["Email"];
             var password = Request.QueryString["Password"];
-            ClearQueryString();
 
             var result = GetResponse(ApiUrl + $"login?email={email}&password={password}");
             if (result != null && result.Message == "Success!")
             {
                 var user = JsonConvert.DeserializeObject<User>(result.Data["user"].ToString());
-                //ViewBag.Status = 0;
-                //ViewBag.User = user;
                 Session["user"] = user;
                 return RedirectToAction("Index");
             }
@@ -97,6 +82,7 @@ namespace RideWithMeWebApp.Web.Controllers
 
         public async Task<ActionResult> RegisterUser()
         {
+            // TODO: Convert this method to POST with FormCollection
             var email = Request.QueryString["Email"];
             var password = Request.QueryString["Password"];
             var firstName = Request.QueryString["FirstName"];
@@ -125,11 +111,11 @@ namespace RideWithMeWebApp.Web.Controllers
 
         public async Task<ActionResult> UpdateUser()
         {
+            // TODO: Convert this method to POST with FormCollection
             var email = Request.QueryString["Email"];
             var password = Request.QueryString["Password"];
             var firstName = Request.QueryString["FirstName"];
             var lastName = Request.QueryString["LastName"];
-            //var success = false;
             var userId = (Session["user"] as IUser)?.Id;
 
             var content = new List<Dictionary<string, string>>();
@@ -248,16 +234,6 @@ namespace RideWithMeWebApp.Web.Controllers
             }
 
             Session["user"] = user;
-        }
-
-        private void ClearQueryString()
-        {
-            PropertyInfo isreadonly = typeof(System.Collections.Specialized.NameValueCollection).GetProperty(
-                "IsReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            isreadonly.SetValue(this.Request.QueryString, false, null);
-
-            this.Request.QueryString.Clear();
         }
     }
 }
